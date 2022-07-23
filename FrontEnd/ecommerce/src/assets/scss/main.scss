@@ -1,0 +1,14 @@
+@import "./base.scss";
+@import "./flex/flex.scss";
+
+/* Text */
+.text-center{
+    text-align: center;
+}
+
+/* Các container */
+.router-container, .container{
+    padding: 0 300px;
+}
+
+
