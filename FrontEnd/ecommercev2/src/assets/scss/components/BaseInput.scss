@@ -1,0 +1,44 @@
+@import "@/assets/scss/_variables.scss";
+
+.base-input{
+    padding: 0;
+    input{
+        background-color: $white;
+    }
+    .icon-input{
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+.icon{
+    &.left{
+        margin: 5px 0 0 6px;
+    }
+    cursor: pointer;
+}
+
+.base-input-item{
+    border: none;
+    padding: 4px 12px;
+    background: transparent;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    height: $input-height;
+    border-radius: $input-border-radius;
+    &:focus{
+        outline: none;
+    }
+}
+.has-right-icon{
+    padding-right: 40px;
+}
+.has-left-icon{
+    padding-left: 40px;
+}
+
+.error-icon{
+    margin: 5px 6px 0 0;
+}
