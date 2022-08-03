@@ -1,0 +1,60 @@
+{
+  "name": "ecommercev2",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@egjs/flicking-plugins": "^4.4.0",
+    "@egjs/vue3-flicking": "^4.9.1",
+    "core-js": "^3.8.3",
+    "floating-vue": "^2.0.0-beta.17",
+    "v-tooltip": "^2.1.3",
+    "vue": "^3.2.13",
+    "vue-agile": "^2.0.0",
+    "vuex": "^4.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-vue": "^8.0.3",
+    "sass": "^1.54.0",
+    "sass-loader": "^10.3.1",
+    "vue-router": "^4.1.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "@babel/eslint-parser"
+    },
+    "rules": {
+      "no-unused-vars": "off",
+      "no-const-assign": "off",
+      "no-undef": "off",
+      "no-useless-escape": "off",
+      "no-multiple-template-root": "off",
+      "vue/multi-word-component-names" : "off",
+      "vue/no-unused-components": "off"
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
+}

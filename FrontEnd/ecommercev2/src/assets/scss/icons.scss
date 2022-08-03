@@ -1,0 +1,53 @@
+@import '@/assets/scss/_variables.scss';
+
+.icon24{
+    height:24px;
+    width: 24px;
+    position: relative;
+    cursor: pointer;
+    &:before{
+        content: '';
+        position: absolute;
+        background: transparent url($image-sprite) no-repeat;
+        height: 24px;
+        width: 24px;
+        top: 0;
+        left: 0;
+    }
+    &.account::before{
+        background-position: -626px -10px;
+    }
+    &.shopping-cart::before{
+        background-position: -582px -10px;
+    }
+    &.position::before{
+        background-position: -406px -10px;
+    }
+    &.search::before{
+        background-position: -450px -10px;
+    }
+    &.search-red::before{
+        background-position: -450px -10px;
+    }
+    &.service::before{
+        background-position: -54px -10px;
+    }
+    &.three-line::before{
+        background-position: -230px -10px;
+    }
+    &.arrow-down::before{
+        background-position: -142px -10px;
+    }
+    &.news::before{
+        background-position: -318px -10px;
+    }
+    &.shop-red::before{
+        background-position: -538px -10px;
+    }
+    &.previous::before{
+        background-position: -10px -10px;
+    }
+    &.next::before{
+        background-position: -362px -10px;
+    }
+}

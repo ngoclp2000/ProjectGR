@@ -1,0 +1,53 @@
+.agile__nav-button{
+    background: unset;
+    outline:none !important;
+    border: none !important;
+}
+.agile{
+    display: block;
+	object-fit: cover;
+	width: 100%;
+    &__nav-button{
+		border: none;
+		cursor: pointer;
+		height: 100%;
+		transition-duration: .3s;
+        &:hover{
+            background-color: rgba(rgb(245, 184, 184), .5);
+			opacity: 1;
+        }
+        &--next{
+            position: absolute;
+            right: 0;
+        }
+    }
+    &__dots{
+		left: 50%;
+		position: absolute;
+		transform: translateX(-50%);
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    &__dot{
+        margin: 0 7px;
+        button{
+            background-color: transparent;
+			border: 1px solid #c20000;
+			border-radius: 50%;
+			cursor: pointer;
+			display: block;
+			height: 10px;
+			font-size: 0;
+			line-height: 0;
+			margin: 0;
+			padding: 0;
+			transition-duration: .3s;
+			width: 10px;
+        }
+        &--current,&:hover{
+            button{
+                background-color: #c20000;
+            }
+        }
+    }
+}
