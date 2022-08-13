@@ -62,12 +62,10 @@
                 </div>
                 <div class="w-25">
                     <div class="footer-content-section">
-                        <div class="footer-content-section">
-                            <div class="footer-content-title">Chăm sóc khách hàng</div>
-                            <div class="flex-column footer-bottom-link">
-                                <a href="" class="base-link">Mua online: 0936032597</a>
-                                <a href="" class="base-link">Email: tbngoc@gmail.com</a>
-                            </div>
+                        <div class="footer-content-title">Chăm sóc khách hàng</div>
+                        <div class="flex-column footer-bottom-link">
+                            <a href="#" class="base-link">Mua online: 0936032597</a>
+                            <a href="#" class="base-link">Email: tbngoc@gmail.com</a>
                         </div>
                     </div>
                 </div>

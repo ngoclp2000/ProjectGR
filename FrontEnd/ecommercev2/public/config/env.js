@@ -1,5 +1,6 @@
 window._appConfig ={
-    buttonClickDelayMiliseconds : 200
+    buttonClickDelayMiliseconds : 200,
+    homepage : 'http://localhost:8080/'
 };
 
 

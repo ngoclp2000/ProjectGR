@@ -98,3 +98,39 @@
 a{
     text-decoration: none;
 }
+
+
+
+
+.grid-title{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    color: #333333 !important;
+    line-height: 24px;
+    font-size: 18px;
+    div{
+        font-weight: 600 !important;
+    }
+}
+ol{
+    padding: 12px 20px;
+    line-height: 20px;
+    text-align: justify;
+    font-size: 14px;
+}
+li{
+    list-style: none;
+}
+strong{
+    font-weight: bold;
+}
+
+.fw-400{
+    font-weight: 400 !important;
+}
+
+.color-red{
+    color: #c20000;
+}

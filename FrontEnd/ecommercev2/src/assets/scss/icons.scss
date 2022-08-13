@@ -18,7 +18,7 @@
         background-position: -626px -10px;
     }
     &.shopping-cart::before{
-        background-position: -582px -10px;
+        background-position: -626px -10px;
     }
     &.position::before{
         background-position: -406px -10px;
@@ -49,5 +49,8 @@
     }
     &.next::before{
         background-position: -362px -10px;
+    }
+    &.shopping-cart-red::before{
+        background-position: -582px -10px;
     }
 }

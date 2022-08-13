@@ -40,6 +40,10 @@ button{
         background-color: transparent !important;
     }
 }
+.btn-padding{
+    padding: 5px 15px !important;
+    margin-right: 5px;
+}
 .btn-red{
     height: 36px;
     transition: all 0.35s !important;
@@ -53,11 +57,39 @@ button{
     align-items: center !important;
     justify-content: center !important;
     background-color: #fff !important;
-    padding: 0px !important;
     color: #c20000 !important;
     overflow: hidden;
+    &.no-active:active{
+        color: #c20000 !important;
+        background-color: #fff !important;
+    }
     &:active{
         color: #fff !important;
         background-color: #c20000 !important;
+    }
+}
+
+.btn-white{
+    height: 36px;
+    transition: all 0.35s !important;
+    border: 1px solid #c20000 !important;
+    cursor: pointer !important;
+    text-transform: inherit !important;
+    font-weight: 500 !important;
+    border-radius: 4px !important;
+    font-size: 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: #c20000 !important;
+    color: #fff !important;
+    overflow: hidden;
+    &.no-active:active{
+        color: #fff !important;
+        background-color: #c20000 !important;
+    }
+    &:active{
+        color: #c20000 !important;
+        background-color: #fff !important;
     }
 }

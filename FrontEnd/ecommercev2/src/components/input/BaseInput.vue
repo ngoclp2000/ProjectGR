@@ -13,7 +13,7 @@
                     :maxlength="maxLength"
                     :style="{width : `${width}px`}"
                     ref="input"
-                    :class="{disabled : disabled, 'has-right-icon' : rightIcon , 'has-left-icon' : leftIcon}"
+                    :class="{disabled : disabled, 'has-right-icon' : rightIcon , 'has-left-icon' : leftIcon, 'has-border' : hasBorder}"
                     v-on="listeners"
             />
             <div :class="['icon24 icon right icon-input', rightIcon]" v-if="rightIcon" :title="errorProvider.errorMessage" @click="onClickRightIcon">
