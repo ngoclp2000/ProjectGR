@@ -14,6 +14,7 @@
         placeholder="Nhập tên sản phẩm, mã sản phẩm, từ khóa cần tìm..."
         :width="widthSearchBar"
         rightIcon="search-red"
+        :hasBorder="false"
         ></base-input>
       </div>
       <div class="row-action flex-between">

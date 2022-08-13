@@ -7,7 +7,6 @@ import VueAgile from 'vue-agile'
 import VTooltip from 'v-tooltip'
 import store from '@/store/store.js';
 
-
 const app = createApp(App);
 
 

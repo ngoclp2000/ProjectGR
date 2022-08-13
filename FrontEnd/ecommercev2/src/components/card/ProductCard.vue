@@ -1,5 +1,5 @@
 <template>
-    <div class="product-card" >
+    <div class="product-card" v-if="!hide">
         <card @click="cardClick">
             <template #card-sub-information>
                 <div class="product-discount">
@@ -44,7 +44,10 @@ export default {
         BaseButton
     },
     props: {
-
+        hide:{
+            type: Boolean,
+            default: false,
+        }
     },
     emits:[
         "cardClick"
