@@ -1,0 +1,34 @@
+textarea{
+    resize: vertical;
+}
+
+.checkout-page{
+    .checkout-page-title{
+        font-size: 24px !important;
+        color: #333333;
+        padding: 16px;
+    }
+    .checkout-page-radio-container{
+        .checkout-page-radio-title{
+            padding: 16px !important;
+        }
+        .radio-container{
+            padding: 16px;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+    }
+    .checkout-page-address{
+        margin-top: 20px;
+        background-color: #fff;
+        padding: 16px;
+    }
+    .note-detail-checkout{
+        padding: 20px;
+        background-color: #fff;
+        margin-top: 20px;
+        .note-detail-checkout-content{
+            margin-bottom: 20px;
+        }
+    }
+}

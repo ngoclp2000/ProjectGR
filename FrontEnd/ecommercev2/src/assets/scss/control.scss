@@ -3,3 +3,37 @@
         margin-right: 10px;
     }
 }
+
+.product-cart-list{
+    padding: 15px;
+    .product-detail-content{
+        font-size: 13px;
+        margin-bottom: 10px;
+        justify-content: flex-end;
+        .product-detail-content-img{
+            img{
+                height: 70px;
+                width: 70px;
+            }
+        }
+        .product-detail-content-main{
+            color: #333333;
+            div{
+                margin-bottom: 5px;
+            }
+        }
+        .product-detail-content-price{
+            color: #c20000;
+        }
+        
+    }
+    border-bottom: 1px solid #d9d9d9;
+}
+
+.product-cart-summary{
+    padding: 15px;
+    font-size: 13px;
+}
+.product-cart-action{
+    padding: 10px 15px;
+}

@@ -25,11 +25,14 @@
     background-color: #f1f1f1;
     
 }
-
-@media screen and (max-width: 1366px) {
+@media only screen and (width: 414px){
     .main-content{
-        padding: 0 50px !important;
-        
+        padding: 0px !important;
+    }
+}
+@media screen and (max-width: 1366px)  {
+    .main-content{
+        padding: 0 50px;
     }
     .main-container{
         .fixed-wrapper{
@@ -60,7 +63,9 @@
 .w-25{
     width: 25%;
 }
-
+.w-50{
+    width: 50%;
+}
 /* Margin */
 .mr-1{
     margin-right: 1pt;
@@ -80,8 +85,21 @@
 .mt-1{
     margin-top: 1px;
 }
-
-
+.mb-1{
+    margin-top: 1pt;
+}
+.mb-15px{
+    margin-bottom: 15px;
+}
+.mb-10px{
+    margin-bottom: 10px;
+}
+.mb-20px{
+    margin-bottom: 20px;
+}
+.mb-25px{
+    margin-bottom: 25px;
+}
 /* Position */
 .relative{
     position: relative;
@@ -133,4 +151,14 @@ strong{
 
 .color-red{
     color: #c20000;
+}
+
+textarea{
+    width: 100%;
+    font-size: 13px;
+    padding: 6px 12px;
+}
+
+.cursor-pointer{
+    cursor: pointer;
 }

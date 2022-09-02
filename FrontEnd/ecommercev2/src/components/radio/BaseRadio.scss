@@ -1,0 +1,11 @@
+
+.base-radio{
+    .base-radio-container:not(:last-child){
+        margin-right: 15px;
+    }
+    .base-radio-container{
+        label{
+            margin-left: 5px;
+        }
+    }
+}

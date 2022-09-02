@@ -133,3 +133,24 @@
         }
     }
 }
+
+@media only screen and (max-width: 414px) {
+    .product-page-main-content{
+        flex-direction: column; 
+    }
+    .product-detail-content{
+        flex: 1 !important;
+    }
+    .product-main-information-type{
+        .product-detail-content{
+            display: flex !important;
+            justify-content: flex-end !important;
+        }
+    }
+    .product-main-information-quantity{
+        .product-detail-content{
+            display: flex !important;
+            justify-content: flex-end !important;
+        }
+    }
+}

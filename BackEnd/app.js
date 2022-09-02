@@ -5,6 +5,8 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const fs = require('fs');
 const path = require('path');
+const apiRoute = require('./src/routes/router');
+const prototype = require('./src/helpers/prototype');
 
 const accessLogStream = fs.readFileSync("./logs/access.log",{
     interval: "id",
@@ -12,20 +14,12 @@ const accessLogStream = fs.readFileSync("./logs/access.log",{
 });
 const isProduction = process.env.NODE_ENV === 'production';
 const port = process.env.LISTENING_PORT || 8888;
-
 const app = express();
-
 app.use(cookieParser());
-app.use(morgan(isProduction ? morgan("combined", {stream : accessLogStream}): morgan("dev") ) );
+// app.use(morgan(isProduction ? morgan("combined", {stream : accessLogStream}): morgan("dev") ) );
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-
-
-
-
-
-
 
 app.use((error, req, res, next) => {
     res.status(error.errorCode);
@@ -37,4 +31,7 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
     next();
 });
+
+app.use(apiRoute);
+
 const server = app.listen(port);

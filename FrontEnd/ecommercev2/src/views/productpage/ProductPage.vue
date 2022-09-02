@@ -12,18 +12,18 @@
       </div>
       <div class="product-page-main-information flex flex-column">
         <div class="product-main-information-name sub-information">
-          Nước táo lên men Strongbow Apple Ciders Red Berries lon cao 330ml (Vị dâu đỏ)
+          {{ product.productName }}
         </div>
         <div class="product-main-information-code sub-information">
-          SKU: 10601528
+          SKU: {{ product.productCode }}
         </div>
         <div class="product-main-information-price-status">
-          <div class="old-price price flex flex-row sub-information flex-center">
+          <div class="old-price price flex flex-row sub-information flex-center" v-if="product.productDiscount != 0">
             <div class="old-price-title price-title  product-detail-title">
               Giá niêm yết
             </div>
             <div class="old-price-value price-value product-detail-content">
-              22.000 ₫
+              {{ formatVND(product.productPrice) }}
             </div>
           </div>
           <div class="price flex flex-row sub-information flex-center">
@@ -31,7 +31,7 @@
               Giá bản lẻ
             </div>
             <div class="price-value product-detail-content">
-              19.500 ₫
+              {{ formatVND(product.productDiscount) }}
             </div>
           </div>
           <div class="status flex flex-row">
@@ -39,7 +39,7 @@
               Tình trạng
             </div>
             <div class="status-value product-detail-content">
-              Còn hàng
+              {{ product.productStatus == 1 ? 'Còn hàng' : 'Hết hàng' }}
             </div>
           </div>
         </div>
@@ -52,7 +52,7 @@
             12:00 sáng ngày hôm sau. Liên hệ hỗ trợ: 024 71066866
           </div>
         </div>
-        <div class="product-main-information-type flex flex-row">
+        <div class="product-main-information-type flex flex-row flex-between">
           <div class="product-detail-title">
             Chọn loại
           </div>
@@ -62,12 +62,13 @@
             </base-multi-button>
           </div>
         </div>
-        <div class="product-main-information-quantity flex flex-row">
+        <div class="product-main-information-quantity flex flex-row flex-between">
           <div class="product-detail-title">
             Số lượng
           </div>
-          <div class="product-detail-content">
-            <vue-number-input v-model="value" :inputtable="false" :min="1" :max="10" size="small" inline controls>
+          <div class="product-detail-content ">
+            <vue-number-input v-model="value" :inputtable="false" :min="1" :max="product.productQuantity" size="small"
+              inline controls>
             </vue-number-input>
           </div>
         </div>
@@ -93,12 +94,13 @@
         </div>
         <div class="product-page-description-information flex2">
           <div class="product-description-list-information flex flex-column">
-            <div v-for="(information,index) in descriptionInformation" :key="index" class="flex flex-row list-information-item fw-400">
+            <div v-for="(information, index) in descriptionInformation" :key="index"
+              class="flex flex-row list-information-item fw-400">
               <div class="flex2">
-                {{information.title}}
+                {{ information.title }}
               </div>
               <div class="flex1">
-                {{information.content}}
+                {{ information.content }}
               </div>
             </div>
           </div>
@@ -121,7 +123,7 @@
               Đánh giá <span class="color-red">*</span>
             </div>
             <div class="flex5">
-            <star-rating :rating="rating" :increment="0.5" :star-size="25" :show-rating="false"></star-rating>
+              <star-rating :rating="rating" :increment="0.5" :star-size="25" :show-rating="false"></star-rating>
 
             </div>
           </div>
@@ -135,7 +137,7 @@
           </div>
           <div class="email-customer flex flex-row flex-center product-rate-item">
             <div class="email-customer-title flex1 product-rate-title">
-              Email 
+              Email
             </div>
             <div class="email-customer-input flex5">
               <base-input placeholder="Nhập email..."></base-input>
@@ -165,6 +167,14 @@
               <base-input placeholder="Nhập nội dung..."></base-input>
             </div>
           </div>
+          <div class="flex button-rate flex-row">
+            <div class="flex1">
+            </div>
+            <div class="flex5">
+              <base-button text="ĐÁNH GIÁ" customClass="btn-white btn-padding ">
+          </base-button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -191,6 +201,8 @@ import VueNumberInput from '@chenfengyuan/vue-number-input';
 import StarRating from 'vue-star-rating'
 import BaseInput from '@/components/input/BaseInput.vue';
 import GridListProductCard from '@/components/card/GridListProductCard.vue';
+import ProductAPI from '@/apis/components/productAPI';
+import { useFormat } from '@/commons/format.js';
 
 export default {
   components: {
@@ -203,14 +215,15 @@ export default {
     BaseInput,
     GridListProductCard
   },
-  setup(props, { emit }) {
+  async setup(props, { emit }) {
     const { proxy } = getCurrentInstance();
+    const { formatVND } = useFormat();
+    const product = ref({});
+
+
     const homepage = ref();
     const productName = ref("Bánh bơ trứng Richy gói 270g");
-    const listSlider = ref([{
-      src: "https://res.cloudinary.com/mp32022/image/upload/Banner/slide5.jpg",
-      page: ''
-    },]);
+    const listSlider = ref([]);
     const listTypeButtons = ref([]);
     const value = ref(1);
     const description = ref(`<h2>Nước táo lên men Strongbow Apple Ciders Red Berries chai 330ml (Vị dâu đỏ)</h2>
@@ -241,42 +254,30 @@ export default {
   <p><strong>- Hình sản phẩm chỉ mang tính chất minh họa, hình thực tế bao bì của sản phẩm tùy thời điểm sẽ khác so với thực tế.</strong></p>  
 `);
 
-  const descriptionInformation = ref([{
-    title: 'Xuất xứ',
-    content: 'United Kingdom'
-  },
-  {
-    title: 'Thành Phần',
-    content: 'Cider (nước ép táo lên men với sucrose), nước, siro, màu caramel (E150a), chất điều chỉnh độ acid (E296), khí carbonate, chất bảo quản Kali Metabisulfit (E224), hương táo tự nhiên'
-  },
-  {
-    title: 'Hướng Dẫn Sử Dụng',
-    content: 'Sử dụng trực tiếp. Ngon hơn khi dùng với đá'
-  },
-  {
-    title: 'Bảo Quản',
-    content: 'Để nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp'
-  }]);
+    const descriptionInformation = ref([{
+      title: 'Xuất xứ',
+      content: 'United Kingdom'
+    },
+    {
+      title: 'Thành Phần',
+      content: 'Cider (nước ép táo lên men với sucrose), nước, siro, màu caramel (E150a), chất điều chỉnh độ acid (E296), khí carbonate, chất bảo quản Kali Metabisulfit (E224), hương táo tự nhiên'
+    },
+    {
+      title: 'Hướng Dẫn Sử Dụng',
+      content: 'Sử dụng trực tiếp. Ngon hơn khi dùng với đá'
+    },
+    {
+      title: 'Bảo Quản',
+      content: 'Để nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp'
+    }]);
 
-  const rating = ref(0);
+    const rating = ref(0);
 
-  const productRelationProducts = ref([{
-
-  },{
-
-  },{
-
-  },{
-
-  },{
-
-  },{
-
-  },
-  {
-
-  }]);
-    onMounted(() => {
+    const productRelationProducts = ref();
+    onMounted(async () => {
+      let productId = proxy.$store.state.productView;
+      const res = await ProductAPI.getDataById(productId);
+      product.value = res.data ? res.data.data : null;
       homepage.value = window._appConfig.homepage;
       listTypeButtons.value = [{
         text: 'Hộp'
@@ -284,7 +285,23 @@ export default {
         text: 'Thùng'
       }, {
         text: 'Gói 6'
-      }]
+      }];
+      // Gán ảnh cho sản phẩm
+      if (product.value && product.value.productImage) {
+        if (Array.isArray(product.value.productImage)) {
+          product.value.productImage.forEach(item => {
+            listSlider.value.push({
+              src: item
+            })
+          })
+        } else {
+          listSlider.value.push({
+            src: product.value.productImage
+          })
+        }
+      }
+      // Gán sản phẩm liên quan
+      productRelationProducts.value = product.value.relationProduct;
     })
     return {
       homepage,
@@ -295,7 +312,9 @@ export default {
       description,
       descriptionInformation,
       rating,
-      productRelationProducts
+      productRelationProducts,
+      product,
+      formatVND
     };
   }
 }
