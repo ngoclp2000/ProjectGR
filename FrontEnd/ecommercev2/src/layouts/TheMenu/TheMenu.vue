@@ -2,20 +2,7 @@
   <div class="w-100 menu">
     <div class="container flex-between the-menu">
       <div class="menu-category">
-        <menu-wrapper :position="{at : 'left bottom' , my : 'left top'}">
-          <template #menu-button="{ toggleMenu }">
-            <button @click.prevent="toggleMenu">
-              Bấm đê
-            </button>
-          </template>
-
-          <template #menu-content>
-            <menu-item>
-
-            </menu-item>
-          </template>
-
-        </menu-wrapper>
+        
       </div>
       <div class="row-action">
         <div class="recent-view-product">
@@ -35,13 +22,10 @@
 </template>
 
 <script>
-import MenuWrapper from '@/components/menu/menuwrapper/MenuWrapper.vue';
-import MenuItem from '@/components/menu/menuitem/MenuItem.vue';
 
 export default {
   components: {
-    MenuWrapper,
-    MenuItem
+    
   }
 }
 </script>

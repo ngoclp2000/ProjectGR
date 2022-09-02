@@ -1,7 +1,7 @@
 <template>
     <div class="card flex-column" @click="cardClick">
         <div class="card-top">
-            <div class="card-sub-information">
+            <div class="card-sub-information" v-if="productDiscount > 0">
                 <slot name="card-sub-information">
 
                 </slot>
@@ -36,6 +36,12 @@ export default {
     emits:[
         "click"
     ],
+    props: {
+        productDiscount:{
+            type: Number,
+            default: 0,
+        }
+    },  
     setup(props, {emit}){
         const cardClick = (e) =>{
             emit("click",e);

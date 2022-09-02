@@ -1,30 +1,32 @@
 <template>
     <div class="product-card" v-if="!hide">
-        <card @click="cardClick">
-            <template #card-sub-information>
-                <div class="product-discount">
-                    12%
+        <card @click="cardClick"
+        :productDiscount="productDiscount"
+        >
+            <template #card-sub-information >
+                <div class="product-discount" >
+                    {{productDiscount}}%
                 </div>
             </template>
             <template #card-image>
-                <img src="~@/assets/images/product.jpg" alt="" style="width: 100%; height: 100%">
+                <img :src="productImage" alt="" style="width: 100%; height: 100%">
             </template>
             <template #card-name>
-                <span>Sữa đậu nành hạnh nhân 1L</span>
+                <span>{{productName}}</span>
             </template>
             <template #card-detail-information>
                 <div class="product-detail product-unit">
-                    ĐVT: Hộp
+                    ĐVT: {{productUnit}}
                 </div>
-                <div class="product-detail product-price">
-                    41.900 đ
+                <div class="product-detail product-price" v-if="productPrice > 0">
+                    {{formatVND(productPrice)}}
                 </div>
-                <div class="product-detail product-old-price">
-                    66.500 đ
+                <div class="product-detail product-old-price" v-if="productOldPrice > 0">
+                    {{formatVND(productOldPrice)}}
                 </div>
             </template>
             <template #button>
-                <base-button text="Thêm vào giỏ hàng" customClass="w-100 btn-red">
+                <base-button text="Thêm vào giỏ hàng" customClass="w-100 btn-red" @click="addProductCart">
 
                 </base-button>
             </template>
@@ -37,6 +39,8 @@
 import Card from './Card.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
 import {getCurrentInstance} from 'vue';
+import {useFormat} from '@/commons/format.js';
+import { useToast } from "primevue/usetoast";
 export default {
     name: "ProductCard",
     components: {
@@ -47,25 +51,68 @@ export default {
         hide:{
             type: Boolean,
             default: false,
+        },
+        productId:{
+            type: String,
+            default: ""
+        },
+        productDiscount:{
+            type: Number,
+            default: 0,
+        },
+        productName:{
+            type: String,
+            default: "Tên sản phẩm",
+        },
+        productUnit:{
+            type: String,
+            default: ""
+        },
+        productPrice:{
+            type: Number,
+            default: 0,
+        },
+        productOldPrice:{
+            type: Number,
+            default: 0,
+        },
+        productImage:{
+            type: String,
+            default: ""
         }
     },
     emits:[
         "cardClick"
     ],
     setup(props, { emit }) {
-
+        const toast = useToast();
         const {proxy} = getCurrentInstance();
-
+        const {formatVND} = useFormat();
         const cardClick = (e) => {
-            //proxy.$router.push({ path: '/product' });
+            proxy.$router.push({ path: '/product' });
             proxy.$store.dispatch({
                 type : 'changeProductView',
-                productView : "123"
+                productView : props.productId
             })
-            console.log(proxy.$store.state.productView);
+        }
+        const addProductCart = ()=>{
+            let payload = {
+                productId : props.productId,
+                productName: props.productName,
+                productUnit : props.productUnit,
+                productQuantity : 1,
+                productPrice : props.productPrice,
+                productOldPrice: props.productOldPrice,
+                productDiscount: props.productDiscount,
+                productImage: props.productImage
+            }
+            proxy.$store.dispatch('addProductCart',payload);
+            toast.add({severity:'info', summary:'Thông báo', detail:'Thêm thành công', life: 2500});
         }
         return {
-            cardClick
+            cardClick,
+            formatVND,
+            addProductCart
         }
     }
 }

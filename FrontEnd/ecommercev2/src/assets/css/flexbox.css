@@ -50,7 +50,7 @@
     display: -webkit-flex;
     display: flex;
     justify-content: flex-end;
-    align-items: center;
+    align-items: flex-end;
 }
 
 .flex,.flex1{
@@ -135,4 +135,11 @@
 .flex20{
     -webkit-flex: 20;
     flex: 20;
+}
+
+.flex-bs-33{
+    flex-basis: 33.33333px;
+}
+.flex-bs-16{
+    flex-basis: 16.66667px;
 }

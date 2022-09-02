@@ -47,5 +47,8 @@ export default {
         background-color: #c20000 !important;
     }
 }
+.button-element:last-child{
+    margin-right: 0px;
+}
 
 </style>

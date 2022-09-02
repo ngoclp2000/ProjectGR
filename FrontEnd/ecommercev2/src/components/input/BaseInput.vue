@@ -15,6 +15,8 @@
                     ref="input"
                     :class="{disabled : disabled, 'has-right-icon' : rightIcon , 'has-left-icon' : leftIcon, 'has-border' : hasBorder}"
                     v-on="listeners"
+                    :type="type"
+                    v-model="internalText"
             />
             <div :class="['icon24 icon right icon-input', rightIcon]" v-if="rightIcon" :title="errorProvider.errorMessage" @click="onClickRightIcon">
 
@@ -82,6 +84,18 @@ export default defineComponent({
             type: [Number,String],
             default: null
         },
+        field:{
+            type: String,
+            default: null
+        },
+        type:{
+            type: String,
+            default: null
+        },
+        label:{
+            type: String,
+            default: null
+        }
     },
     emits:[
         'baseKeydown',
@@ -92,9 +106,10 @@ export default defineComponent({
         'baseKeyup',
         'onClickLeftIcon',
         'onClickRightIcon',
+        'input'
     ],
     setup(props, {emit}){
-        const internalText = ref('');
+        const internalText = ref();
         const focused = ref(false);
         const displayValue = ref(null);
         const input = ref(null);
@@ -198,14 +213,18 @@ export default defineComponent({
                 },
                 keyup: (e) => {
                     emit('baseKeyup',e,internalText.value);
+                },
+                input:(e) =>{
+                    cancelBubbleEvent(e);
+                    emit('input',internalText.value);
                 }
             }
         });
 
-        watch(() => internalText.value,() => (value) =>{
+        watch(() => internalText.value,(value) =>{
             if(value !== props.modelValue){
-                emit('update:modelValue',value);
-                scrollWidth = input.value.scrollWidth;
+                emit('update:modelValue',value,props.field);
+                //scrollWidth = input.value.scrollWidth;
             }
         })
 

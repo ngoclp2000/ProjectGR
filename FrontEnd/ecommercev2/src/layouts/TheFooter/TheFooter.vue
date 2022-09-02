@@ -2,19 +2,19 @@
     <div class="footer ">
         <div class="flex-row footer-top container">
             <div class="footer-top-content flex flex-center">
-                <div class="footer-top-content-item w-25 flex flex-center">
+                <div class="footer-top-content-item w-25 flex-center">
                     <img src="~@/assets/images/footer-img1.png" alt="">
                     <h3 class="about">Sản phẩm an toàn</h3>
                 </div>
-                <div class="footer-top-content-item w-25 flex flex-center">
+                <div class="footer-top-content-item w-25 flex-center">
                     <img src="~@/assets/images/footer-img2.png" alt="">
                     <h3 class="about">Chất lượng cam kết</h3>
                 </div>
-                <div class="footer-top-content-item w-25 flex flex-center">
+                <div class="footer-top-content-item w-25 flex-center">
                     <img src="~@/assets/images/footer-img3.png" alt="">
                     <h3 class="about">Dịch vụ vượt trội</h3>
                 </div>
-                <div class="footer-top-content-item w-25 flex flex-center">
+                <div class="footer-top-content-item w-25 flex-center">
                     <img src="~@/assets/images/footer-img4.png" alt="">
                     <h3 class="about">Giao hàng nhanh</h3>
                 </div>

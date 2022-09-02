@@ -1,6 +1,6 @@
 <template>
     <div class="slider-container">
-        <agile>
+        <agile :autoplay="autoplay">
             <slot name="slider-content">
                 
             </slot>
@@ -24,7 +24,10 @@ export default {
     components: {
     },
     props: {
-
+        autoplay:{
+            type: Boolean,
+            default: false,
+        }
     },
     setup(props) {
         const plugins = [];
