@@ -22,7 +22,11 @@
     display: flex;
     align-items: center;
 }
-
+.flex-jt-center{
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+}
 .flex-rtl{
     display: -webkit-flex;
     display: flex;

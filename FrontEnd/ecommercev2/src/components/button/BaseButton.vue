@@ -6,7 +6,9 @@
         hasBorder ? '' : 'btn-border-none',
         disabled ? 'disabled-icon' : '',
         customClass
-    ]" :disabled="disabled || processing" v-tooltip="title">
+    ]" :disabled="disabled || processing" v-tooltip="title" 
+    v-on="listeners"
+    >
         <div :class="['icon24 icon left', leftIcon, disabled ? 'disabled-icon' : '']" v-if="leftIcon">
             &nbsp;
         </div>

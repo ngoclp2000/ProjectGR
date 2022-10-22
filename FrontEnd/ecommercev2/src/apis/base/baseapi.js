@@ -1,5 +1,5 @@
 import BaseAPIConfig from '@/apis/base/baseapiconfig.js'
-
+import store from '@/store/store.js';
 export default class BaseApi{
     constructor(){
         this.controller = null
@@ -60,5 +60,22 @@ export default class BaseApi{
      */
     getDataByCode(code){
         return BaseAPIConfig.get(`${this.controller}code/${code}`)
+    }
+
+    getAsync(url,headers){
+        return BaseAPIConfig.get(url,{
+            headers
+        });
+    }
+    
+    async postAsync(url,headers,data){
+        console.log(headers)
+        if(headers == null || Object.keys(headers).length === 0){
+            headers ={"Authorization" : `Bearer ${store.state.token}`};
+        }
+
+        return await BaseAPIConfig.post(url,data,{
+            headers
+        });
     }
 }

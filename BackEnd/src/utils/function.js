@@ -29,12 +29,17 @@ module.exports = {
         };
     },
     buildInsertParams: function (idField, table, payload, controllerName, newIdValue) {
+        table = '`' + table + '`';
         let sql = `INSERT INTO ${table}{0} VALUES{1};`;
         let sqlValuesArray = [newIdValue],
             sqlFieldsArray = [idField];
         if (payload && typeof payload == 'object') {
             for (const [key, value] of Object.entries(payload)) {
-                sqlFieldsArray.push(mappingField[controllerName][key] || key);
+                let keyMap = key;
+                if (mappingField[controllerName] && mappingField[controllerName][key]) {
+                    keyMap = mappingField[controllerName][key];
+                }
+                sqlFieldsArray.push(keyMap);
                 sqlValuesArray.push(value);
             }
             // Xử lý nhóm dữ liệu
@@ -85,5 +90,8 @@ module.exports = {
             sql = sql.format(sqlSetParam);
             return sql;
         }
+    },
+    getTokenFromRequest: (req) => {
+        return req.headers.authorization.split(" ")[1];
     }
 }

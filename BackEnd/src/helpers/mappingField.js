@@ -4,5 +4,9 @@ module.exports = {
         account: 'username',
         name: 'fullName',
         roleId : 'roleId',
+    },
+    Order:{
+        paymentMethod : 'paymentMethod',
+        shippingMethod : 'shippingMethod',
     }
 }

@@ -26,7 +26,7 @@
                 </div>
             </template>
             <template #button>
-                <base-button text="Thêm vào giỏ hàng" customClass="w-100 btn-red" @click="addProductCart">
+                <base-button text="Thêm vào giỏ hàng" customClass="w-100 btn-red" @click.stop="addProductCart">
 
                 </base-button>
             </template>
@@ -95,7 +95,8 @@ export default {
                 productView : props.productId
             })
         }
-        const addProductCart = ()=>{
+        const addProductCart = (e)=>{
+            e.preventDefault();
             let payload = {
                 productId : props.productId,
                 productName: props.productName,
