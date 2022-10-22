@@ -11,7 +11,8 @@ const store = createStore({
             },
             productCartList: [
 
-            ]
+            ],
+            isLoading: false
         }
     },
     mutations: {
@@ -45,6 +46,16 @@ const store = createStore({
                     state.account[key] = value;
                 }
             }
+        },
+        updateToken(state, payload) {
+            if(payload && typeof payload === 'object') {
+                state.token = payload.token;
+            }
+        },
+        updateIsLoading(state, payload){
+            if(payload){
+                state.isLoading = payload.loading;
+            }
         }
     },
     actions: {
@@ -62,6 +73,12 @@ const store = createStore({
         },
         updateAccount(context, payload) {
             context.commit("updateAccount", payload);
+        },
+        updateToken(context, payload) {
+            context.commit("updateToken",payload);
+        },
+        updateIsLoading(context, payload){
+            context.commit("updateIsLoading",payload);
         }
     },
     getters: {

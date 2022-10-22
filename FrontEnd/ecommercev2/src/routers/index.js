@@ -3,6 +3,7 @@ import routerHomepage from "./routerHomepage";
 import routerProductPage from "./routerProductPage.js";
 import routerCart from "./routerCart.js";
 import routerCheckout from "./routerCheckout.js";
+import routerProfile from './routerProfile.js';
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -18,7 +19,8 @@ const router = createRouter({
         ...routerHomepage,
         ...routerProductPage,
         ...routerCart,
-        ...routerCheckout
+        ...routerCheckout,
+        ...routerProfile
       ]
     },
     {

@@ -31,9 +31,9 @@
                         <div class="footer-link">Công Ty Cổ Phần Dịch Vụ Thương Mại Tổng Hợp Thân Thời Food</div>
                         <div class="footer-link">Mã số doanh nghiệp: 0104918404 Đăng ký lần đầu ngày 20 tháng 09 năm
                             2010, đăng ký thay đổi lần thứ 44, ngày 15 tháng 09 năm 2021</div>
-                        <div class="footer-sale-validate">
+                        <!-- <div class="footer-sale-validate">
                             <img src="~@/assets/images/logoSale.png" alt="">
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="w-25">

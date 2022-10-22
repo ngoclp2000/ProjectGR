@@ -2,15 +2,28 @@
 <div id="app">
   <router-view/>
   <toast/>
+  <loading v-if="IsLoading"></loading>
 </div>
 </template>
 
 <script>
 import Toast from 'primevue/toast';
+import Loading from '@/components/loading/Loading.vue';
+import { ref,computed,getCurrentInstance,onMounted} from 'vue';
 export default {
   name: 'App',
   components: {
-    Toast
+    Toast,
+    Loading
+  },
+  setup(){
+    const {proxy} = getCurrentInstance();
+    const IsLoading = computed(() =>{
+      return proxy.$store.state.isLoading;
+    })
+    return{
+      IsLoading
+    }
   }
 }
 </script>

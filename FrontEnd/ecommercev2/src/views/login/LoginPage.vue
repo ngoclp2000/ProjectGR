@@ -89,6 +89,9 @@ export default {
               fullName : userInfo.fullName
             };
             proxy.$store.dispatch("updateAccount", payload);
+            proxy.$store.dispatch("updateToken",{
+              token : res.data.data
+            });
             proxy.$router.push('homepage');
           }
         }

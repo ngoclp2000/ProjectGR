@@ -15,42 +15,54 @@
         left: 0;
     }
     &.account::before{
-        background-position: -671px -10px;
+        background-position: -890px -10px;
     }
     &.shopping-cart::before{
-        background-position: -626px -10px;
+        background-position: -846px -10px;
     }
     &.position::before{
-        background-position: -406px -10px;
+        background-position: -582px -10px;
     }
     &.search::before{
-        background-position: -450px -10px;
+        background-position: -670px -10px;
     }
     &.search-red::before{
-        background-position: -450px -10px;
+        background-position: -626px -10px;
     }
     &.service::before{
-        background-position: -54px -10px;
-    }
-    &.three-line::before{
-        background-position: -230px -10px;
-    }
-    &.arrow-down::before{
         background-position: -142px -10px;
     }
+    &.three-line::before{
+        background-position: -406px -10px;
+    }
+    &.arrow-down::before{
+        background-position: -274px -10px;
+    }
     &.news::before{
-        background-position: -318px -10px;
+        background-position: -494px -10px;
     }
     &.shop-red::before{
-        background-position: -538px -10px;
+        background-position: -758px -10px;
     }
     &.previous::before{
         background-position: -10px -10px;
     }
     &.next::before{
-        background-position: -362px -10px;
+        background-position: -538px -10px;
     }
     &.shopping-cart-red::before{
-        background-position: -582px -10px;
+        background-position: -802px -10px;
+    }
+    &.statistic::before{
+        background-position: -54px -10px;
+    }
+    &.transaction::before{
+        background-position: -98px -10px;
+    }
+    &.dashboard::before{
+        background-position: -230px -10px;
+    }
+    &.logout::before{
+        background-position: -362px -10px;
     }
 }

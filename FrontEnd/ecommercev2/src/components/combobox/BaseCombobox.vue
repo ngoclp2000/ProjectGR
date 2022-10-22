@@ -7,10 +7,10 @@
             <div ref="select" style="z-index:4" v-show="isShow && listData.length > 0" class="select-custom"
                 :class="directionDrop" :style="[{ width: width + 'px' }]">
                 <div v-for="(option, index) in listData" :key="index"
-                    @click="evtMouseChoosingOption(option['content'], option['id'])" class="option"
-                    :class="[option.isPointed ? 'point-option' : '', option.isChosen ? 'show-select' : '']" :ref="'option' + index">
-                    <div class="option-content none-pointer" 
-                        :style="{ 'textAlign': textAlign }">
+                    @click="evtMouseChoosingOption(option, option['id'])" class="option"
+                    :class="[option.isPointed ? 'point-option' : '', option.isChosen ? 'show-select' : '']"
+                    :ref="'option' + index">
+                    <div class="option-content none-pointer" :style="{ 'textAlign': textAlign }">
                         {{ option.content }}</div>
                 </div>
             </div>
@@ -79,8 +79,8 @@ export default defineComponent({
             * Sự kiện click chuột vào option
             * Created by TBN (22/7/2021)
             */
-        function evtMouseChoosingOption(content, id) {
-            modelValue.value = content;
+        function evtMouseChoosingOption(obj, id) {
+            modelValue.value = obj.content;
             listData.value.forEach((item) => {
                 if (item.id == id) {
                     item.isChosen = true;
@@ -89,13 +89,14 @@ export default defineComponent({
                 }
             })
             isShow.value = false;
+            emit('update:chosenObj',obj,props.field);
         }
         onMounted(() => {
             listData.value = props.listDropdownData;
             modelValue.value = props.chosenValue;
             if (listData.value.length > 0) {
                 let firstElement = listData.value[0];
-                evtMouseChoosingOption(firstElement.content, firstElement.id);
+                evtMouseChoosingOption(firstElement, firstElement.id);
             }
         });
 
@@ -110,6 +111,15 @@ export default defineComponent({
 
         watch(() => modelValue.value, (newVal)=>{
             emit('update:modelValue',newVal,props.field);
+        })
+
+        watch(() => props.listDropdownData, (newVal)=>{
+            listData.value = newVal;
+            modelValue.value = props.chosenValue;
+            if (listData.value.length > 0) {
+                let firstElement = listData.value[0];
+                evtMouseChoosingOption(firstElement, firstElement.id);
+            }
         })
 
         function documentClick(e) {
@@ -185,7 +195,7 @@ export default defineComponent({
                     // Nếu trước đó dropdown đang hiện
                     if (indexPointedOption.value >= 0) {
                         // Mượn sự kiện click chuột vào option
-                        evtMouseChoosingOption(listData.value[indexPointedOption.value].content,listData.value[indexPointedOption.value].id)
+                        evtMouseChoosingOption(listData.value[indexPointedOption.value],listData.value[indexPointedOption.value].id)
                     }
                     // Chuyển trạng thái được trỏ tới của option về false
                     //this.resetPointedOption();

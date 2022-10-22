@@ -157,7 +157,7 @@ export default {
     }
 
     const goToLogin = () => {
-      if(!(proxy.$store.state.account && proxy.$store.state.account["userId"])){
+      if(!(proxy.$store.state.account && proxy.$store.state.account["userId"] && proxy.$store.state.token)){
         proxy.$router.push("/login");
       }
     }
