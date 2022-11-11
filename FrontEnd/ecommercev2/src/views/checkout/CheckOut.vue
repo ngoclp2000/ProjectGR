@@ -254,7 +254,11 @@ export default {
 
         const takePayment = async () =>{
             proxy.model.orderTotalAmount = totalComputedMoney;
+            proxy.model.productList = JSON.stringify(proxy.$store.state.productCartList);
             const res = await OrderAPI.takePayment(proxy.model);
+            if(res.code === 200){
+                //
+            }
         }
 
         return {

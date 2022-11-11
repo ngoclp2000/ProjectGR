@@ -1,6 +1,6 @@
 <template>
     <div class="cart-page flex flex-row">
-        <div class="cart-page-left flex4">
+        <div class="cart-page-left  flex-left">
             <div class="cart-page-action-button flex flex-between">
                 <base-button text="TIẾP TỤC MUA HÀNG" customClass="btn-white btn-padding no-active" @click="goBackToHomepage">
                 </base-button>
@@ -46,7 +46,7 @@
                 </div>
             </div>
         </div>
-        <div class="cart-page-right flex1">
+        <div class="cart-page-right  flex-right">
             <div class="total-amount flex flex-between cart-page-right-item">
                 <div class="total-amount-title">
                     Tạm tính:

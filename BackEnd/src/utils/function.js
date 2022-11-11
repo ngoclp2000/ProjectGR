@@ -91,6 +91,20 @@ module.exports = {
             return sql;
         }
     },
+    buildSelectWithField: function(mappingFieldsValues,table){
+        let sql = "", where = "";
+        if(mappingFieldsValues != null){
+            let whereArray = [];
+            for (const [key, value] of Object.entries(mappingFieldsValues)) {
+                whereArray.push(`${"`" +key + "`"} = ${typeof value === 'string' ? "'" + value + "'" : value}`);
+            }
+            if(whereArray.length > 0){
+                where = whereArray.join('AND');
+                sql += `SELECT * FROM ${table} WHERE ${where};`;
+            }
+        }
+        return sql;
+    },
     getTokenFromRequest: (req) => {
         return req.headers.authorization.split(" ")[1];
     }

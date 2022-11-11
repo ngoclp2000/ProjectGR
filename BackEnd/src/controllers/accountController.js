@@ -2,12 +2,23 @@ const tryCatchBlock = require("../utils/function").tryCatchBlockForController;
 const HttpError = require("../models/http-errors");
 const AccountService = require('../services/accountService');
 const Authentication = require('../models/authentication');
+const ErrorCode = require('../shared/enums/errorCode');
+const signUpMessage = require('../shared/resources/signUpMessage');
+
 module.exports = {
     signUp: tryCatchBlock(null, async (req, res, next) => {
         const result = await AccountService.signUp(req.body);
+        if(result.isError){
+            switch(result.errorCode){
+                case ErrorCode.DuplicateUserName:
+                    result.errorMessage = signUpMessage.DuplicateUserName;
+                    return res.status(200).send(result); 
+            }
+        }
+
         return res.status(200).send({
             message: "GET_PRODUCT_SUCCESS",
-            data: result
+            data: result?.data
         });
     }),
     completeProfile : tryCatchBlock(null, async (req, res, next) =>{

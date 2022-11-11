@@ -36,6 +36,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/assets/scss/mixins.scss";
 .grid-product-card {
   .grid-product-card-title {
     display: flex;
@@ -53,12 +54,15 @@ export default {
     grid-template-columns: repeat(5, 1fr);
     gap: 5px;
     background-color: #fff !important;
-  }
-
-  @media only screen and (max-width: 414px) {
-    .product-container {
+    @include for-size(tablet-lg){
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media only screen and (max-width: 414px) {
       grid-template-columns: repeat(1, 1fr);
     }
   }
+
+  
+  
 }
 </style>

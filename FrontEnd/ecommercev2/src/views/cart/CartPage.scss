@@ -1,6 +1,25 @@
+@import '@/assets/scss/mixins.scss';
+
 .cart-page{
     color: #333333;
     font-size: 13px;
+    background-color: #f1f1f1;
+    padding-bottom: 116px;
+    @include for-size(desktop,down){
+        padding-bottom: 76px;
+    };
+    @include for-size(desktop-lg,down){
+        padding-bottom: 151px;
+    };
+    .flex-left{
+        flex:4;
+        @include for-size(desktop,up){
+            flex: 3;
+        };
+    }
+    .flex-right{
+        flex: 1;
+    }
     .cart-page-left{
         padding-top: 10px;
         .cart-page-action-button{

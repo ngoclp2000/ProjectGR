@@ -1,9 +1,9 @@
-const Product = require('../models/product');
+const ProductRepo = require('../repos/productRepo');
 
-const productInstance = new Product();
+const productRepo = new ProductRepo();
 
 module.exports = {
     getProductById : async function(productId) {
-        return await productInstance.getDataById(productId);
+        return await productRepo.getDataById(productId);
     }
 }

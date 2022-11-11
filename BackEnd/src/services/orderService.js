@@ -1,7 +1,7 @@
-const Order = require('../models/order');
+const OrderRepo = require('../repos/orderRepo');
 const ValueDefault = require("../shared/constants/valueDefault");
 
-const orderInstance = new Order();
+const orderRepo = new OrderRepo();
 
 module.exports = {
     takePayment: async function (payload, userId) {
@@ -11,8 +11,7 @@ module.exports = {
                 orderDiscountId: payload.orderDiscountId || ValueDefault.OrderDiscountId,
                 orderShippingTypeId : payload.orderShippingTypeId || ValueDefault.OrderShippingTypeId,
             }
-            let resCreateOrder =  await orderInstance.createOrder(objectOrder);
-            
+            let resCreateOrder =  await orderRepo.createOrder(objectOrder);
         }
     }
 }
