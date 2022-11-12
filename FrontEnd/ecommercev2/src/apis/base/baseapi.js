@@ -69,7 +69,6 @@ export default class BaseApi{
     }
     
     async postAsync(url,headers,data){
-        console.log(headers)
         if(headers == null || Object.keys(headers).length === 0){
             headers ={"Authorization" : `Bearer ${store.state.token}`};
         }
@@ -77,5 +76,14 @@ export default class BaseApi{
         return await BaseAPIConfig.post(url,data,{
             headers
         });
+    }
+
+    /**
+     * Lấy dữ liệu bảng
+     * @returns 
+     * tbngoc 13.11.2022
+     */
+    async getDataTable(payload){
+        return await BaseAPIConfig.post(`${this.controller}/dataTable`,payload)
     }
 }

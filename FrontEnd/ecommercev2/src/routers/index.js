@@ -4,6 +4,7 @@ import routerProductPage from "./routerProductPage.js";
 import routerCart from "./routerCart.js";
 import routerCheckout from "./routerCheckout.js";
 import routerProfile from './routerProfile.js';
+import routerDemo from "./routerDemo.js";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -20,7 +21,7 @@ const router = createRouter({
         ...routerProductPage,
         ...routerCart,
         ...routerCheckout,
-        ...routerProfile
+        ...routerProfile,
       ]
     },
     {
@@ -50,7 +51,8 @@ const router = createRouter({
       meta:{
         anonymous : true
       }
-    }
+    },
+    ...routerDemo
   ],
 });
 
