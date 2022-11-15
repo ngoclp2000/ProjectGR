@@ -4,6 +4,10 @@ export default class BaseApi{
     constructor(){
         this.controller = null
     }
+    
+    getController(){
+        return this.controller;
+    }
     /**
      * Phương thức lấy tất cả dữ liệu
      * Created By TBN (14/08/2022)

@@ -1,6 +1,7 @@
 const HttpError = require("../models/http-errors");
 const mappingField = require("../helpers/mappingField");
-
+const optionFilter = require("../shared/enums/optionFilter");
+const DataTypes = require("../shared/enums/dataType");
 
 module.exports = {
     tryCatchBlockForModule: (passInFunc) => {
@@ -91,14 +92,15 @@ module.exports = {
             return sql;
         }
     },
-    buildSelectWithField: function(mappingFieldsValues,table){
-        let sql = "", where = "";
-        if(mappingFieldsValues != null){
+    buildSelectWithField: function (mappingFieldsValues, table) {
+        let sql = "",
+            where = "";
+        if (mappingFieldsValues != null) {
             let whereArray = [];
             for (const [key, value] of Object.entries(mappingFieldsValues)) {
                 whereArray.push(`${"`" +key + "`"} = ${typeof value === 'string' ? "'" + value + "'" : value}`);
             }
-            if(whereArray.length > 0){
+            if (whereArray.length > 0) {
                 where = whereArray.join('AND');
                 sql += `SELECT * FROM ${table} WHERE ${where};`;
             }
@@ -107,5 +109,78 @@ module.exports = {
     },
     getTokenFromRequest: (req) => {
         return req.headers.authorization.split(" ")[1];
-    }
+    },
+    parseWhere(filters, fieldsConfig) {
+        let sql = "",
+            arrayWhere = [];
+        if (filters && Array.isArray(filters) && filters.length > 0) {
+            filters.forEach(item => {
+                let keyword = "";
+                switch (item.type) {
+                    case optionFilter.Like:
+                        keyword = "LIKE";
+                        break;
+                    case optionFilter.Equal:
+                        keyword = "=";
+                        break;
+                    case optionFilter.NotEqual:
+                        keyword = "!=";
+                        break;
+                    case optionFilter.GreaterThan:
+                        keyword = ">";
+                        break;
+                    case optionFilter.LessThan:
+                        keyword = "<";
+                        break;
+                    case optionFilter.GreaterThanOrEqual:
+                        keyword = ">=";
+                        break;
+                    case optionFilter.LessThanOrEqual:
+                        keyword = "<=";
+                        break;
+                    case optionFilter.In:
+                        keyword = "IN";
+                        break;
+                }
+                // Lấy dạng của giá trị
+                let value = "";
+                if (fieldsConfig != null) {
+                    let fieldType = fieldsConfig[item.field].type;
+                    switch (fieldType) {
+                        case DataTypes.Number:
+                        case DataTypes.Boolean:
+                            value = item.value;
+                            break;
+                        case DataTypes.String:
+                            switch (item.type) {
+                                case optionFilter.Like:
+                                    value = "'%" + item.value + "%'";
+                                    break;
+                                default:
+                                    value = "'" + item.value + "'";
+                                    break;
+                            }
+                            break;
+                        case DataTypes.Date:
+                            break;
+                    }
+                }
+                arrayWhere.push(`(${item.field} ${keyword} ${value})`);
+            });
+        }
+        
+        sql = arrayWhere.join(" AND ");
+        if (sql != null && sql != "") {
+            sql = " WHERE " + sql;
+        }
+        return sql;
+    },
+    parseSkip(page, size) {
+        if (page && size) {
+            const pageInt = parseInt(page),
+                sizeInt = parseInt(size);
+            return `LIMIT ${size} OFFSET ${(pageInt - 1) * sizeInt}`;
+        }
+    },
+
 }

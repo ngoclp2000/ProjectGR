@@ -1,6 +1,7 @@
 <template>
   <div>
-    <grid-view :columns="x" :layout="'fitColumns'" :api="productAPI"></grid-view>
+    <grid-view :columns="x" :layout="'fitColumns'" :controller="productAPI.getController()" :paginationSizeSelector="y" locale="vi" :paginationSize="5">
+    </grid-view>
   </div>
 </template>
 
@@ -11,14 +12,15 @@ export default {
   components: { gridView },
   setup() {
     const x = [
-      { title: "Mã sản phẩm", field: "productCode" },
-      { title: "Tên sản phẩm", field: "productName" },
-      { title: "Giá sản phẩm", field: "productPrice", hozAlign: "center" },
-      { title: "Giá khuyến mãi", field: "productDiscount", hozAlign: "center" },
-      { title: "Số lượng", field: "productQuantity", hozAlign: "center" },
-      { title: "Trạng thái", field: "productStatus", hozAlign: "center",formatter:"tickCross" },
+      { title: "Mã sản phẩm", field: "productCode" ,headerFilter:true},
+      { title: "Tên sản phẩm", field: "productName" ,headerFilter:"input"},
+      { title: "Giá sản phẩm", field: "productPrice", hozAlign: "center",headerFilter:"input" ,headerFilterFunc:"="},
+      { title: "Giá khuyến mãi", field: "productDiscount", hozAlign: "center",headerFilter:"input",headerFilterFunc:"=" },
+      { title: "Số lượng", field: "productQuantity", hozAlign: "center" ,headerFilter:"input"},
+      { title: "Trạng thái", field: "productStatus", hozAlign: "center",formatter:"tickCross",headerFilter:"input" },
     ];
-    return { x,productAPI };
+    const y = [5,10,20,50];
+    return { x,productAPI ,y};
   }
 }
 </script>

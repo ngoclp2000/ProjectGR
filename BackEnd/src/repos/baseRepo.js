@@ -1,9 +1,11 @@
 const database = require("../utils/database");
-const tryCatchBlock = require("../utils/function").tryCatchBlockForModule;
 const {
+    tryCatchBlockForModule,
     buildUpdateWithParams,
     buildInsertParams,
-    buildSelectWithField
+    buildSelectWithField,
+    parseSkip,
+    parseWhere
 } = require("../utils/function");
 
 module.exports = class BaseRepo {
@@ -11,24 +13,24 @@ module.exports = class BaseRepo {
 
     }
 
-    getDataById = tryCatchBlock(async (id) => {
+    getDataById = tryCatchBlockForModule(async (id) => {
         // get comment
         const [resultSet] = await database.query(`SELECT * FROM ${this.model.table} WHERE ${this.model.idField} = '${id}'`);
         return resultSet.length === 0 ? null : resultSet[0];
     });
 
-    getNewId = tryCatchBlock(async () => {
+    getNewId = tryCatchBlockForModule(async () => {
         const [resultSet] = await database.query(`SELECT UUID() as newId;`);
         return resultSet.length === 0 ? null : resultSet[0].newId;
     })
 
-    getAsyncAllData = tryCatchBlock(async () => {
+    getAsyncAllData = tryCatchBlockForModule(async () => {
         const sql = `SELECT * FROM ` + this.model.table + ` WHERE 1=1;`;
         const [resultSet] = await database.query(sql);
         return resultSet == null || resultSet.length === 0 ? null : resultSet;
     });
 
-    getAsyncByFields = tryCatchBlock(async (mappingFieldsValues) => {
+    getAsyncByFields = tryCatchBlockForModule(async (mappingFieldsValues) => {
         if (mappingFieldsValues != null) {
             let sql = buildSelectWithField(mappingFieldsValues, this.model.table);
             if (sql != null && sql != '') {
@@ -39,9 +41,32 @@ module.exports = class BaseRepo {
         return null;
     });
 
-    getDataTable = tryCatchBlock(async (payload) => {
-        let sql = `SELECT * FROM ${this.model.table};`;
+    getDataTable = tryCatchBlockForModule(async (payload) => {
+        let sql = `SELECT * FROM ${this.model.table} `;
+
+        let parseWhereValue = parseWhere(payload.filter, this.model.fields);
+        sql += " " + parseWhereValue + " " || "";
+        if (payload) {
+            sql += parseSkip(payload.page, payload.size);
+        }
+        console.log(sql);
         const [resultSet] = await database.query(sql);
-        return resultSet == null || resultSet.length === 0 ? null : resultSet;
+        let sqlSummary = `SELECT COUNT(*) as totalRecord FROM ${this.model.table} ${parseWhereValue || ""};`;
+
+        const [resultSummary] = await database.query(sqlSummary);
+
+        let maxPage = 0;
+        if (resultSummary) {
+            let totalRecord = resultSummary[0].totalRecord;
+            maxPage = Math.ceil(totalRecord / parseInt(payload.size || 0));
+        }
+
+        return resultSet == null || resultSet.length === 0 ? {
+            data : [],
+            last_page: 0
+        } : {
+            data: resultSet,
+            last_page: maxPage
+        };
     })
 }

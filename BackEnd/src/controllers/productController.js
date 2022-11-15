@@ -12,9 +12,6 @@ module.exports = {
     }),
     getDataTable :tryCatchBlock(null, async (req, res, next) => {
         const product = await ProductService.getDataTable(req.body);
-        return res.status(200).send({
-            message: "GET_DATA_TABLE_SUCCESS",
-            data: product
-        });
+        return res.status(200).send(product);
     })
 }

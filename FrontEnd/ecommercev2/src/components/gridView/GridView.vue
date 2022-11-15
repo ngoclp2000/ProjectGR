@@ -4,9 +4,12 @@
 </template>
 
 <script>
-import { ref, reactive, onMounted, defineComponent } from 'vue';
+import { ref, reactive, onMounted, defineComponent, getCurrentInstance } from 'vue';
 import { TabulatorFull as Tabulator } from 'tabulator-tables'; //import Tabulator library
 import baseComponent from '@/components/base/BaseComponent.vue';
+import { userGridViewCommon } from './GridViewCommon';
+import APIConfig from '@/apis/config/apiconfig.js';
+
 export default defineComponent({
     extends: baseComponent,
     name: "gridView",
@@ -33,44 +36,93 @@ export default defineComponent({
             type: String,
             default: "fitDataTable"
         },
-        api: {
+        controller: {
+            type: String,
+            default: null
+        },
+        paginationSize: {
+            type: Number,
+            default: 20
+        },
+        paginationSizeSelector: {
             type: Object,
             default: null
+        },
+        locale: {
+            type: String,
+            default: "en"
         }
     },
     setup(props, { emits }) {
+        const { proxy } = getCurrentInstance();
         const table = ref(props.idTable); //reference to your table element
         const tabulator = ref(null); //variable to hold your table
+        const firstLoad = ref(true);
         const tableData = ref([
-            { id: 1, name: "Billy Bob", age: 12, gender: "male", height: 95, col: "red", dob: "14/05/2010" },
-            { id: 2, name: "Jenny Jane", age: 42, gender: "female", height: 142, col: "blue", dob: "30/07/1954" },
-            { id: 3, name: "Steve McAlistaire", age: 35, gender: "male", height: 176, col: "green", dob: "04/11/1982" },
+
         ]); //data for table to display
 
+        const { localizationConfig } = userGridViewCommon();
+
         onMounted(async () => {
-            if (props.api) {
-                let request = await props.api.getDataTable();
-                if (request != null) {
-                    let data = request.data;
-                    if (data != null) {
-                        tableData.value = data.data;
-                    }
-                }
+            let controller = "";
+            if (props.controller) {
+                controller = props.controller;
+                // let request = await props.api.getDataTable();
+                // if (request != null) {
+                //     let data = request.data;
+                //     if (data != null) {
+                //         tableData.value = data.data;
+                //     }
+                // }
             }
             //instantiate Tabulator when element is mounted
             tabulator.value = new Tabulator(table.value, {
-                data: tableData.value, //link data to table
                 columns: props.columns,
                 layout: props.layout,
-                reactiveData: true, //turn on data reactivity
-                pagination: "local",
-                paginationSize: 1,
-                paginationSizeSelector: [3, 6, 8, 10],
+                pagination: true,
+                paginationMode: "remote",
+                paginationSize: props.paginationSize,
+                paginationSizeSelector: props.paginationSizeSelector,
                 movableColumns: true,
                 paginationCounter: "rows",
+                locale: props.locale,
+                langs: localizationConfig,
+                ajaxURL: `${APIConfig}${controller}/dataTable`,
+                ajaxConfig: "POST", //ajax HTTP request type
+                ajaxContentType: "json", // send parameters to the server as a JSON encoded string
+                columnHeaderSortMulti:true,
+                filterMode:"remote",
             });
+            tabulator.value.on("pageSizeChanged", handlePageSizeChanged);
+            tabulator.value.on("pageLoaded", handlePageNoChange);
+
+            //tabulator.value.setLocale("vi");
         })
-        return { tabulator, table };
+
+        /**
+         * Sự kiện đổi số bản ghi trên 1 trang
+         * tbngoc   13.11.2022
+         */
+        const handlePageSizeChanged = (pagesize) => {
+            if (!firstLoad.value) {
+                console.log(pagesize);
+            } else {
+                // Load
+                firstLoad.value = !firstLoad.value;
+            }
+        };
+
+        const handlePageNoChange = (pageNo) => {
+            if (!firstLoad.value) {
+                console.log('Trang số' + pageNo);
+            } else {
+                firstLoad.value = !firstLoad.value;
+            }
+        };
+
+
+        return { tabulator, table, handlePageSizeChanged };
     }
 });
 
