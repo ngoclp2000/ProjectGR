@@ -1,0 +1,102 @@
+@import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/mixins.scss';
+
+.admin-container {
+    width: 100%;
+    height: 100%;
+
+    // padding: 0 220px;
+    // @media screen and (max-width: 1366px) {
+    //     padding: 0 50px;
+    // }
+    // @media only screen and (width: 414px) {
+    //     padding: 0px !important;
+    // }
+    .label-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding-bottom: 10px;
+        width: 100%;
+        background-color: #F9FBFD;
+
+        .logo {
+            background-image: url("~@/assets/images/logo.png");
+            height: 36px;
+            width: 36px;
+            background-size: 100% 100%;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .three-line {}
+    }
+
+
+    .nav-bar {
+        min-width: 245px;
+        &.toggle-navbar{
+            min-width: 75px !important;
+            .information{
+                padding: 0px 36px !important;
+            }
+        }
+        max-width: fit-content;
+        height: 100vh;
+        overflow: hidden;
+        position: fixed;
+        position: fixed;
+        left: 0;
+        top: 0;
+        padding: 12px 0px;
+        padding-top: 36px;
+        background-color: #ffffff;
+
+        .information {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0px 36px;
+
+            img {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+            }
+
+            .main-information {
+                margin-left: 15px;
+
+                .name {
+                    font-weight: $font-weight-bold;
+                    font-size: 13px;
+                    margin-bottom: 5px;
+                }
+
+                .email {
+                    font-size: 13px;
+                    color: #879bb9 !important;
+                }
+            }
+        }
+
+        .main-menu {
+            margin-top: 20px;
+        }
+    }
+
+    .main-content-admin {
+        margin: 36px 50px;
+        margin-bottom: 0px;
+        margin-left: 281px;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+        order: 3;
+        background-color: #ffffff;
+        &.toggle-navbar{
+            margin-left: 166px !important;
+        }
+        transition: all 0.3s ease;
+    }
+}

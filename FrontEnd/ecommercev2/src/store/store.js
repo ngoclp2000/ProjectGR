@@ -12,7 +12,56 @@ const store = createStore({
             productCartList: [
 
             ],
-            isLoading: false
+            isLoading: false,
+            menuList:[{
+                iconClass: 'icon24-admin dashboard',
+                content: 'Dashboard',
+                route: '/admin/dashboard',
+                key: 'dashboard',
+                isSelected: true
+            },{
+                iconClass: 'icon24-admin product',
+                content: 'Product',
+                route: '/admin/product',
+                key: 'product',
+                isSelected: false
+            },{
+                iconClass: 'icon24-admin category',
+                content: 'Category',
+                route: '/admin/category',
+                key: 'category',
+                isSelected: false
+            },{
+                iconClass: 'icon24-admin order',
+                content: 'Order',
+                route: '/admin/order',
+                key: 'order',
+                isSelected: false
+            },{
+                iconClass: 'icon24-admin sales',
+                content: 'Sales Promotion',
+                route: '/admin/sales',
+                key: 'sales',
+                isSelected: false
+            },{
+                iconClass: 'icon24-admin customer',
+                content: 'Customer',
+                route: '/admin/customer',
+                key: 'customer',
+                isSelected: false
+            },{
+                iconClass: 'icon24-admin supplier',
+                content: 'Supplier',
+                route: '/admin/supplier',
+                key: 'supplier',
+                isSelected: false
+            },{
+                iconClass: 'icon24-admin accounting',
+                content: 'Accounting',
+                route: '/admin/accounting',
+                key: 'accounting',
+                isSelected: false
+            }]
         }
     },
     mutations: {
@@ -56,6 +105,14 @@ const store = createStore({
             if(payload){
                 state.isLoading = payload.loading;
             }
+        },
+        deleteAccount(state, payload){
+            state.account = {};
+        },
+        updateMenuItems(state, payload){
+            if(payload){
+                state.menuList = payload;
+            }
         }
     },
     actions: {
@@ -79,6 +136,12 @@ const store = createStore({
         },
         updateIsLoading(context, payload){
             context.commit("updateIsLoading",payload);
+        },
+        deleteAccount(context,payload) {
+            context.commit("deleteAccount",payload);
+        },
+        updateMenuItems(context,payload){
+            context.commit("updateMenuItems",payload);
         }
     },
     getters: {

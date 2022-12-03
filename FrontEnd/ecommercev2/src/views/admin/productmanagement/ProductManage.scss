@@ -1,0 +1,12 @@
+@import "@/assets/scss/_variables.scss";
+
+.product-manage{
+    background-color: #F9FBFD;
+    .label{
+        font-weight: $font-weight-bold;
+        font-size: $font-size-label;
+        padding: 10px 0px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #F0F0F0;
+    }
+}

@@ -66,3 +66,130 @@
         background-position: -362px -10px;
     }
 }
+
+.icon24-admin{
+    height:24px;
+    width: 24px;
+    position: relative;
+    cursor: pointer;
+    &:before{
+        content: '';
+        position: absolute;
+        background: transparent url($image-admin-sprite) no-repeat;
+        height: 24px;
+        width: 24px;
+        top: 0;
+        left: 0;
+    }
+    &.dashboard::before{
+        background-position: -670px -10px;;
+    }
+    &.product::before{
+        background-position: -626px  -10px;
+    }
+    &.category::before{
+        background-position: -582px  -10px;
+    }
+    &.order::before{
+        background-position: -538px  -10px;
+    }
+    &.sales::before{
+        background-position: -450px   -10px;
+    }
+    &.customer::before{
+        background-position: -494px  -10px;
+    }
+    &.supplier::before{
+        background-position: -406px  -10px;
+    }
+    &.accounting::before{
+        background-position: -362px  -10px;
+    }
+    &.selected{
+        &.dashboard::before{
+            background-position: -318px  -10px;;
+        }
+        &.product::before{
+            background-position: -274px   -10px;
+        }
+        &.category::before{
+            background-position: -230px  -10px;
+        }
+        &.order::before{
+            background-position: -186px   -10px;
+        }
+        &.sales::before{
+            background-position: -142px    -10px;
+        }
+        &.customer::before{
+            background-position: -98px   -10px;
+        }
+        &.supplier::before{
+            background-position: -54px   -10px;
+        }
+        &.accounting::before{
+            background-position: -10px   -10px;
+        }
+    }
+}
+.icon24-dashboard{
+    height:24px;
+    width: 24px;
+    position: relative;
+    cursor: pointer;
+    &:before{
+        content: '';
+        position: absolute;
+        background: transparent url($image-admin-dashboard-sprite) no-repeat;
+        height: 24px;
+        width: 24px;
+        top: 0;
+        left: 0;
+    }
+    &.revenue::before{
+        background-position: -142px -10px;
+    }
+    &.expense::before{
+        background-position:  -98px -10px;
+    }
+    &.order::before{
+        background-position: -54px -10px;
+    }
+    &.customer::before{
+        background-position: -10px -10px;
+    }
+}
+
+.icon24-dashboard-summary{
+    height:24px;
+    width: 24px;
+    position: relative;
+    cursor: pointer;
+    &:before{
+        content: '';
+        position: absolute;
+        background: transparent url($image-admin-dashboard-summary-sprite) no-repeat;
+        height: 24px;
+        width: 24px;
+        top: 0;
+        left: 0;
+    }
+    &.avg-sale::before{
+        background-position: -230px -10px;
+    }
+    &.item-sale::before{
+        background-position:  -186px -10px;
+    }
+    &.total-sale::before{
+        background-position: -142px -10px;
+    }
+    &.visitor::before{
+        background-position: -98px -10px;
+    }
+    &.product::before{
+        background-position: -54px -10px;
+    }
+    &.sell-item::before{
+        background-position: -10px -10px;
+    }
+}

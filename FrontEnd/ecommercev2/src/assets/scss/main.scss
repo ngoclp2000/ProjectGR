@@ -3,6 +3,9 @@
 @import "@/assets/scss/components/BaseInput.scss";
 @import "@/assets/scss/_variables.scss";
 
+html{
+    background-color: #F9FBFD;
+}
 /* Text */
 .text-center {
     text-align: center;

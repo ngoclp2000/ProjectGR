@@ -86,8 +86,10 @@ export default {
             let payload = {
               userId : userInfo.userId,
               avatar : userInfo.avatar,
-              fullName : userInfo.fullName
+              fullName : userInfo.fullName,
+              email: userInfo.email,
             };
+            proxy.$store.dispatch("deleteAccount", payload);
             proxy.$store.dispatch("updateAccount", payload);
             proxy.$store.dispatch("updateToken",{
               token : res.data.data

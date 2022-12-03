@@ -1,133 +1,108 @@
 <template>
-    <div ref="table" :id="idTable">
-    </div>
+    <easy-data-table  :alternating="alternating" :buttons-pagination="buttonsPagination"
+        :headers="headers" :items="items" @click-row="rowClick" v-model:items-selected="itemsSelected"
+        :loading="loading" v-model:server-options="serverOptions" 
+        multi-sort :theme-color="'#009879'" table-class-name="customize-table" header-text-direction="left" body-text-direction="left">
+        <template #loading>
+            <loading></loading>
+        </template>
+    </easy-data-table>
 </template>
 
 <script>
-import { ref, reactive, onMounted, defineComponent, getCurrentInstance } from 'vue';
-import { TabulatorFull as Tabulator } from 'tabulator-tables'; //import Tabulator library
-import baseComponent from '@/components/base/BaseComponent.vue';
-import { userGridViewCommon } from './GridViewCommon';
-import APIConfig from '@/apis/config/apiconfig.js';
-
-export default defineComponent({
-    extends: baseComponent,
-    name: "gridView",
+import { ref, getCurrentInstance, computed, onMounted, watch } from 'vue';
+import Loading from '@/components/loading/Loading.vue';
+export default {
+    components: {
+        Loading
+    },
     props: {
-        idTable: {
-            type: String,
-            default: "idTable"
+        borderCell: {
+            type: Boolean,
+            default: true
         },
-        columns: {
+        alternating: {
+            type: Boolean,
+            default: true
+        },
+        buttonsPagination: {
+            type: Boolean,
+            default: true
+        },
+        multiple: {
+            type: Boolean,
+            default: false
+        },
+        api: {
             type: Object,
             default: null
-        },
-        /**
-         * Đây là dạng layout: 
-         *      fitDataFill:  the table will resize the columns to fit their data, and ensure that rows takeup the full width of the table.
-         *      fitDataStretch:  the table will resize the columns to fit their data, and stretch the final column to fill up the remaining width of the table.
-         *      fitDataTable: Tables will automatically resize container and columns to fit the data
-         *      fitColumns: the table will resize columns so that they fit perfectly inside the width of the container.
-         *              Note:   In this layout mode, columns without a `width` set are resized to fill any remaining space on the table. 
-         *                      If all columns cannot fit on the table then a scrollbar will appear.
-                                The `widthGrow` and `widthShrink` column definition properties can be used to set how much each column grows or shrinks by.
-         */
-        layout: {
-            type: String,
-            default: "fitDataTable"
-        },
-        controller: {
-            type: String,
-            default: null
-        },
-        paginationSize: {
-            type: Number,
-            default: 20
-        },
-        paginationSizeSelector: {
-            type: Object,
-            default: null
-        },
-        locale: {
-            type: String,
-            default: "en"
         }
     },
-    setup(props, { emits }) {
+    emits: ['rowClick'],
+
+    setup(props, { emit }) {
         const { proxy } = getCurrentInstance();
-        const table = ref(props.idTable); //reference to your table element
-        const tabulator = ref(null); //variable to hold your table
-        const firstLoad = ref(true);
-        const tableData = ref([
-
-        ]); //data for table to display
-
-        const { localizationConfig } = userGridViewCommon();
-
-        onMounted(async () => {
-            let controller = "";
-            if (props.controller) {
-                controller = props.controller;
-                // let request = await props.api.getDataTable();
-                // if (request != null) {
-                //     let data = request.data;
-                //     if (data != null) {
-                //         tableData.value = data.data;
-                //     }
-                // }
-            }
-            //instantiate Tabulator when element is mounted
-            tabulator.value = new Tabulator(table.value, {
-                columns: props.columns,
-                layout: props.layout,
-                pagination: true,
-                paginationMode: "remote",
-                paginationSize: props.paginationSize,
-                paginationSizeSelector: props.paginationSizeSelector,
-                movableColumns: true,
-                paginationCounter: "rows",
-                locale: props.locale,
-                langs: localizationConfig,
-                ajaxURL: `${APIConfig}${controller}/dataTable`,
-                ajaxConfig: "POST", //ajax HTTP request type
-                ajaxContentType: "json", // send parameters to the server as a JSON encoded string
-                columnHeaderSortMulti:true,
-                filterMode:"remote",
-            });
-            tabulator.value.on("pageSizeChanged", handlePageSizeChanged);
-            tabulator.value.on("pageLoaded", handlePageNoChange);
-
-            //tabulator.value.setLocale("vi");
-        })
+        const itemsSelected = ref(props.multiple ? [] : null);
+        const loading = ref(true);
+        const headers = [
+            { text: "ProductCode", value: "productCode", width: 200 },
+            { text: "ProductName", value: "productName" },
+            { text: "ProductPrice", value: "productPrice", sortable: true, width: 200 },
+            { text: "ProductDiscount", value: "productDiscount", sortable: true, width: 200 },
+            { text: "ProductQuantity", value: "productQuantity", sortable: true, width: 200 },
+            { text: "ProductStatus", value: "productStatus", width: 200 },
+        ];
+        const serverOptions = ref({
+            page: 1,
+            rowsPerPage: 25,
+            sortBy: [],
+            sortType: []
+        });
+        const items = ref([]);
 
         /**
-         * Sự kiện đổi số bản ghi trên 1 trang
-         * tbngoc   13.11.2022
+         * Sự kiện click row
+         * tbngoc 19.11.2022
          */
-        const handlePageSizeChanged = (pagesize) => {
-            if (!firstLoad.value) {
-                console.log(pagesize);
-            } else {
-                // Load
-                firstLoad.value = !firstLoad.value;
-            }
+        const rowClick = (item) => {
+            emit('rowClick', item);
+        }
+
+        const getPayload = () => {
+            let payload = serverOptions.value;
+            payload.size = payload.rowsPerPage;
+            return payload;
         };
 
-        const handlePageNoChange = (pageNo) => {
-            if (!firstLoad.value) {
-                console.log('Trang số' + pageNo);
-            } else {
-                firstLoad.value = !firstLoad.value;
+        onMounted(async () => {
+            await loadData();
+        });
+
+        const loadData = async () => {
+            loading.value = true;
+            let api = props.api;
+            if (api) {
+                let payload = getPayload();
+                try {
+                    let res = await api.getDataTable(payload);
+                    if (res && res.data) {
+                        items.value = res.data.data;
+                    }
+                } catch (e) {
+                    console.log(e);
+                } finally {
+                    loading.value = false;
+                }
             }
-        };
+        }
 
+        watch(serverOptions, async () => { await loadData() }, { deep: true });
 
-        return { tabulator, table, handlePageSizeChanged };
+        return { items, headers, rowClick, itemsSelected, loading, serverOptions };
+
     }
-});
-
+}
 </script>
-
-<style>
-
+<style lang="scss">
+    @import "./GridView.scss";
 </style>

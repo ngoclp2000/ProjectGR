@@ -5,6 +5,7 @@ import routerCart from "./routerCart.js";
 import routerCheckout from "./routerCheckout.js";
 import routerProfile from './routerProfile.js';
 import routerDemo from "./routerDemo.js";
+import routerAdmin from "./routerAdmin";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -52,7 +53,8 @@ const router = createRouter({
         anonymous : true
       }
     },
-    ...routerDemo
+    ...routerDemo,
+    ...routerAdmin
   ],
 });
 

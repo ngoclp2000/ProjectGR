@@ -10,8 +10,8 @@
                         Tài khoản
                     </div>
                     <div class="signup-field-input">
-                        <base-input placeholder="Nhập email hoặc số điện thoại" :modelValue="model.account"
-                            @update:modelValue="updateValue" field="account"></base-input>
+                        <base-input placeholder="Nhập email hoặc số điện thoại" :modelValue="model.username"
+                            @update:modelValue="updateValue" field="username"></base-input>
                     </div>
                 </div>
                 <div class="signup-field-container flex flex-column">

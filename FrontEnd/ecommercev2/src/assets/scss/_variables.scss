@@ -1,7 +1,8 @@
 /* Image */
 $image-sprite: '@/assets/images/sprites.png';
-
-
+$image-admin-sprite: '@/assets/images/admin/sprites.png';
+$image-admin-dashboard-sprite: '@/assets/images/admin/dashboard/sprites.png';
+$image-admin-dashboard-summary-sprite: '@/assets/images/admin/dashboard/summary_sprites.png';
 /* Color */
 $primary: #de3618;
 $secondary: #c1c4cc;
@@ -30,6 +31,9 @@ $input-height: 38px !default;
 
 /* Font */
 $font-weight-bold: 700;
+
+// Fontsize
+$font-size-label: 24px;
 
 /* Combo */
 $combo-height : 32px;
