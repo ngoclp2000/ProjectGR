@@ -224,3 +224,9 @@ body {
         background: rgba(0, 0, 0, .9);
     }
 }
+
+.no-data{
+    background: transparent url("@/assets/images/icons8-no-data-availible-96.png") no-repeat center center ;
+    width: 96px;
+    height: 96px;
+}

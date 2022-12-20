@@ -1,31 +1,31 @@
 <template>
     <div class="product-card" v-if="!hide">
-        <card @click="cardClick"
-        :productDiscount="productDiscount"
-        >
-            <template #card-sub-information >
-                <div class="product-discount" >
-                    {{objectProduct?.productDiscount || productDiscount}}%
+        <card @click="cardClick" :productDiscount="productDiscount">
+            <template #card-sub-information>
+                <div class="product-discount">
+                    {{ objectProduct?.productDiscount || productDiscount }}%
                 </div>
             </template>
             <template #card-image>
                 <img :src="objectProduct?.productImageLink || productImage" alt="" style="width: 100%; height: 100%">
             </template>
             <template #card-name>
-                <span>{{ objectProduct?.productName || productName}}</span>
+                <span>{{ objectProduct?.productName || productName }}</span>
                 <div v-if="objectProduct?.productRate" class="product-rate">
-                    <star-rating :rating="objectProduct?.productRate" :star-size="15" :show-rating="false" read-only  v-bind:max-rating="5" ></star-rating>
+                    <star-rating :rating="objectProduct?.productRate" :star-size="15" :show-rating="false" read-only
+                        v-bind:max-rating="5"></star-rating>
                 </div>
             </template>
             <template #card-detail-information>
                 <div class="product-detail product-unit">
-                    ĐVT: {{ objectProduct?.productUnit || productUnit}}
+                    ĐVT: {{ objectProduct?.productUnit || productUnit }}
                 </div>
-                <div class="product-detail product-price" v-if="( objectProduct?.productPrice || productPrice) > 0">
-                    {{formatVND(objectProduct?.productPrice || productPrice)}}
+                <div class="product-detail product-price" v-if="(objectProduct?.productPrice || productPrice) > 0">
+                    {{ formatVND(objectProduct?.productPrice || productPrice) }}
                 </div>
-                <div class="product-detail product-old-price" v-if=" ( objectProduct?.productOldPrice || productOldPrice) > 0">
-                    {{formatVND(objectProduct?.productOldPrice || productOldPrice)}}
+                <div class="product-detail product-old-price"
+                    v-if="(objectProduct?.productOldPrice || productOldPrice) > 0">
+                    {{ formatVND(objectProduct?.productOldPrice || productOldPrice) }}
                 </div>
             </template>
             <template #button v-if="hasButton">
@@ -41,8 +41,8 @@
 <script>
 import Card from './Card.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
-import {getCurrentInstance} from 'vue';
-import {useFormat} from '@/commons/format.js';
+import { getCurrentInstance } from 'vue';
+import { useFormat } from '@/commons/format.js';
 import { useToast } from "primevue/usetoast";
 import StarRating from 'vue-star-rating';
 export default {
@@ -53,75 +53,83 @@ export default {
         StarRating
     },
     props: {
-        hide:{
+        hide: {
             type: Boolean,
             default: false,
         },
-        objectProduct:{
+        objectProduct: {
             type: Object,
             default: null
         },
-        productId:{
+        productId: {
             type: String,
             default: ""
         },
-        productDiscount:{
+        productDiscount: {
             type: Number,
             default: 0,
         },
-        productName:{
+        productName: {
             type: String,
             default: "Tên sản phẩm",
         },
-        productUnit:{
+        productUnit: {
             type: String,
             default: ""
         },
-        productPrice:{
+        productPrice: {
             type: Number,
             default: 0,
         },
-        productOldPrice:{
+        productOldPrice: {
             type: Number,
             default: 0,
         },
-        productImage:{
+        productImage: {
             type: String,
             default: ""
         },
-        hasButton:{
+        hasButton: {
             type: Boolean,
             default: true
+        },
+        customClickEvent: {
+            type: Function,
+            default: null
         }
     },
-    emits:[
+    emits: [
         "cardClick"
     ],
     setup(props, { emit }) {
         const toast = useToast();
-        const {proxy} = getCurrentInstance();
-        const {formatVND} = useFormat();
+        const { proxy } = getCurrentInstance();
+        const { formatVND } = useFormat();
         const cardClick = (e) => {
-            proxy.$router.push({ path: '/product' });
-            proxy.$store.dispatch({
-                type : 'changeProductView',
-                productView : props.productId
-            })
+            if (props.customClickEvent && typeof props.customClickEvent === "function") {
+                props.customClickEvent(props.objectProduct);
+            } else {
+                proxy.$router.push({ path: '/product' });
+                proxy.$store.dispatch({
+                    type: 'changeProductView',
+                    productView: props.productId
+                })
+            }
         }
-        const addProductCart = (e)=>{
+        const addProductCart = (e) => {
             e.preventDefault();
             let payload = {
-                productId : props.productId,
+                productId: props.productId,
                 productName: props.productName,
-                productUnit : props.productUnit,
-                productQuantity : 1,
-                productPrice : props.productPrice,
+                productUnit: props.productUnit,
+                productQuantity: 1,
+                productPrice: props.productPrice,
                 productOldPrice: props.productOldPrice,
                 productDiscount: props.productDiscount,
                 productImage: props.productImage
             }
-            proxy.$store.dispatch('addProductCart',payload);
-            toast.add({severity:'info', summary:'Thông báo', detail:'Thêm thành công', life: 2500});
+            proxy.$store.dispatch('addProductCart', payload);
+            toast.add({ severity: 'info', summary: 'Thông báo', detail: 'Thêm thành công', life: 2500 });
         }
         return {
             cardClick,
@@ -135,11 +143,13 @@ export default {
 <style lang="scss">
 .product-card {
     font-size: 12px;
-    .product-rate{
+
+    .product-rate {
         display: flex;
         gap: 10px;
         margin-top: 5px;
     }
+
     .product-detail {
         margin-bottom: 5px;
     }

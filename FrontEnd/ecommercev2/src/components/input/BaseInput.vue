@@ -7,7 +7,7 @@
 
             </div>
             <input :title="internalText" class="base-input-item flex w-100 " :placeholder="placeholder"
-                :disabled="disabled" :readOnly="readOnly" :maxlength="maxLength" :style="{ width: `${width}px` }"
+                :disabled="disabled" :readOnly="readOnly" :maxlength="maxLength" :style="{ width: `${width}px !important` }"
                 ref="input"
                 :class="{ disabled: disabled, 'has-right-icon': rightIcon, 'has-left-icon': leftIcon, 'has-border': hasBorder }"
                 v-on="listeners" :type="type" v-model="internalText" />

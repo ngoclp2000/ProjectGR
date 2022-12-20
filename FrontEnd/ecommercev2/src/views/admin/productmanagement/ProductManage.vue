@@ -21,16 +21,30 @@
       </div>
       <div class="product-list flex4" id="product-list-id">
         <div class="sort-filter">
-
+          <div class="add-product">
+            <base-button text="Add Product" customClass="btn-white btn-padding " @click="addProduct"></base-button>
+          </div>
+          <base-select :label="'Filter'" 
+          :width="250" displayField="value"
+          valueField="key"
+          :items="sortDataOptions"
+          @optionChange="handleSortChange"
+          ></base-select>
         </div>
         <div class="product-list-container">
           <product-card v-for="(product, index) in productListManage" :key="index" :objectProduct="product"
-            :hasButton="false">
+            :hasButton="false" :customClickEvent="customClickProductCard">
           </product-card>
         </div>
+        <div v-if="productListManage.length == 0" class="flex-column flex-center">
+          <div class="no-data">
+
+          </div>
+          <div>
+            No data
+          </div>
+        </div>
         <pagination v-if="maxPage > 0" :numberOfPages="maxPage" @pageChange="pageChange"></pagination>
-
-
       </div>
 
     </div>
@@ -51,6 +65,8 @@ import ProductCard from "@/components/card/ProductCard.vue";
 import ProductFilterType from '@/shared/enum/ProductFilterType';
 import commonFunc from '@/commons/commonFunc';
 import Pagination from '@/components/pagination/Pagination.vue';
+import BaseSelect from '@/components/select/BaseSelect.vue';
+import { useProductManage } from './ProductManageData';
 
 
 export default {
@@ -60,7 +76,8 @@ export default {
     RangeFilter,
     StarFilter,
     ProductCard,
-    Pagination
+    Pagination,
+    BaseSelect
   },
   setup(props, { emits }) {
     const { changeChosenTabMenuItem } = useAdminPage();
@@ -70,25 +87,14 @@ export default {
     const { proxy } = getCurrentInstance();
     const keepingFilterManage = ref({});
     const maxPage = ref(0);
+    const {sortDataOptions,handleSortDataOption,defaultFilterOptions} = useProductManage();
 
-    const serverOptions = ref({
-      // page: 1,
-      // size: 25,
-      sortBy: [],
-      sortType: [],
-      filter: [],
-      page: 1,
-      size: 6
-    });
+
+    const serverOptions = ref(commonFunction.cloneDeep(defaultFilterOptions));
 
     const resetFilter = () => {
-      serverOptions.value = {
-        sortBy: [],
-        sortType: [],
-        filter: [],
-        page: 1,
-        size: 6
-      }
+      serverOptions.value = commonFunction.cloneDeep(defaultFilterOptions);
+
       filterOptions.value.forEach(item => {
         let keepingObject = keepingFilterManage.value.find(x => x.field == item.field);
         switch (item.type) {
@@ -204,6 +210,23 @@ export default {
       serverOptions.value.page = page;
     };
 
+    const handleSortChange = (option) =>{
+      const sortObject = handleSortDataOption(option);
+      if(sortObject){
+        serverOptions.value.sortType = [sortObject.sortType];
+        serverOptions.value.sortBy = [sortObject.sortBy];
+      }
+    }
+
+    const customClickProductCard = (data) =>{
+      console.log(data);
+    };
+
+    const addProduct = () => {
+
+    }
+
+
     watch(serverOptions, async () => { await loadData() }, { deep: true });
 
     return {
@@ -214,7 +237,11 @@ export default {
       resetFilter,
       keepingFilterManage,
       maxPage,
-      pageChange
+      pageChange,
+      sortDataOptions,
+      handleSortChange,
+      customClickProductCard,
+      addProduct
     }
   }
 }

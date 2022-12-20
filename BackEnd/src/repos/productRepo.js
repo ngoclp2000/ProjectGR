@@ -93,9 +93,9 @@ module.exports = class ProductRepo extends BaseRepo {
 
     getProductList = tryCatchBlockForModule(async (payload) => {
         let sqlJoin = parseJoin(this.model, 0, this.model.alias);
-        let sqlSelect = getSelectClause(this.model, ['productImageLink', 'username', 'avatar']);
+        let sqlSelect = getSelectClause(this.model, payload.fields || []);
         let sqlSkip = parseSkip(payload.page, payload.size);
-        let sql = `SELECT ${this.model.alias}.*,${sqlSelect} FROM ${this.model.table} ${this.model.alias} ${sqlJoin}`;
+        let sql = `SELECT ${sqlSelect || '*'} FROM ${this.model.table} ${this.model.alias} ${sqlJoin}`;
 
         let parseWhereValue = parseWhere(payload.filter, this.model);
         let parseSortValue = parseSort(payload.sortBy, payload.sortType, this.model);

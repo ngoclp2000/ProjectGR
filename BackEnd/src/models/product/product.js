@@ -20,6 +20,9 @@ module.exports = class Product extends BaseModel {
         this.categoryTable = 'category';
 
         this.fields = {
+            productId:{
+                type: DataTypes.String,
+            },
             productCode: {
                 type: DataTypes.String,
             },

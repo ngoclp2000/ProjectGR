@@ -1,20 +1,14 @@
 <template>
-    <div class="base-select">
-        <v-select :label="label" :options="paginated" :filterable="false" @open="onOpen" @close="onClose"
-            autoscroll append-to-body @search="fetchOptions">
-            <template #no-options>Không có bản ghi nào phù hợp!</template>
-            <template #list-footer>
-                <li v-show="hasNextPage" ref="load" class="loader">
-                    Đang tải...
-                </li>
-            </template>
-
-
-            <template #footer>
-                <div style="opacity: 0.8">
-                    Error
-                </div>
-            </template>
+    <div class="base-select" :style="{ width: `${width}px !important` }">
+        <v-select :label="label" 
+        :items="data"
+        :item-title="displayField"
+        :item-value="valueField"
+        :filterable="false" density="compact"
+        @update:modelValue="optionChange"
+        prepend-inner-icon="mdi-filter"
+        hide-details
+        >
 
         </v-select>
     </div>
@@ -26,6 +20,7 @@ export default {
     name: "BaseSelect",
     components: {
     },
+    emits: ["optionChange"],
     props: {
         modelValue: {
             type: Object,
@@ -39,79 +34,48 @@ export default {
             type: String,
             default: null
         },
-        keyCache:{
+        width:{
+            type: Number,
+            default: null
+        },
+        query:{
+            type: String,
+            default: 'local'
+        },
+        items:{
+            type: Array,
+            default: () => {
+                return [];
+            }
+        }, 
+        displayField:{
+            type: String,
+            default: null
+        },
+        valueField:{
             type: String,
             default: null
         }
     },
     setup(props, { emit }) {
         const { proxy } = getCurrentInstance();
-        const selected = ref();
-        const options = ref([]);
-        const observer = ref(null);
-        const limit = ref(10);
-        const search = ref('');
-
-        const infiniteScroll = async ([{ isIntersecting, target }]) => {
-            if (isIntersecting) {
-                const ul = target.offsetParent;
-                const scrollTop = target.offsetParent.scrollTop;
-
-                proxy.limit += 10;
-                await proxy.$nextTick();
-                ul.scrollTop = scrollTop;
-            }
-        };
-
-        const onClose = () => {
-            proxy.observer.disconnect();
-        }
-
-        const onOpen = async () => {
-            if (proxy.hasNextPage) {
-                await proxy.$nextTick()
-                proxy.observer.observe(proxy.$refs.load);
-            }
-        }
+        const data = ref([]);
 
         onMounted(() => {
-            proxy.observer = new IntersectionObserver(proxy.infiniteScroll);
+            if(props.query != 'local') {
+                //
+            }else{
+                data.value = props.items;
+            }
         });
 
-        watch(() => selected.value, (value) => {
-            emit("update:modelValue", value, props.field);
-        })
-
-        const filtered = computed(() => {
-            return proxy.options.filter((item) => item[props.label].includes(proxy.search))
-        });
-        const paginated = computed(() => {
-            return proxy.filtered.slice(0, proxy.limit)
-        });
-        const hasNextPage = computed(() => {
-            return proxy.paginated.length < proxy.filtered.length
-        });
-
-        const fetchOptions = async(search, loading)=>{
-            // proxy.options = [{
-            //     countryName : "asdasd"
-            // }]
+        const optionChange = (option)=>{
+            emit('optionChange', option);
         }
         
-        
         return {
-            selected,
-            onClose,
-            infiniteScroll,
-            onOpen,
-            filtered,
-            paginated,
-            hasNextPage,
-            search,
-            limit,
-            observer,
-            fetchOptions,
-            options
+            data,
+            optionChange
         }
     }
 }

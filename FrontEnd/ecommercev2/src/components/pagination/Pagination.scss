@@ -1,8 +1,7 @@
 .pagination {
-    display: flex;
-    justify-content: space-between;
     margin-top: 10px;
     background-color: #ffffff;
+    margin-left: 50px;
     .v-pagination__item--is-active{
         button{
             background-color: #c20000 !important;
