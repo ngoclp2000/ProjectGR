@@ -193,3 +193,23 @@
         background-position: -10px -10px;
     }
 }
+
+.icon16{
+    height:16px;
+    width: 16px;
+    position: relative;
+    cursor: pointer;
+    &:before{
+        content: '';
+        position: absolute;
+        background: transparent url($image-sprite-16) no-repeat;
+        height: 16px;
+        width: 16px;
+        top: 0;
+        left: 0;
+    }
+
+    &.star::before{
+        background-position: -10px -10px;
+    }
+}

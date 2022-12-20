@@ -3,7 +3,7 @@
 
 .admin-container {
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 36px);
 
     // padding: 0 220px;
     // @media screen and (max-width: 1366px) {
@@ -90,13 +90,12 @@
         margin: 36px 50px;
         margin-bottom: 0px;
         margin-left: 281px;
-        overflow-y: auto;
-        scroll-behavior: smooth;
         order: 3;
         background-color: #ffffff;
         &.toggle-navbar{
             margin-left: 166px !important;
         }
         transition: all 0.3s ease;
+        height: 100%;
     }
 }

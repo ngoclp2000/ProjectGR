@@ -9,7 +9,7 @@ module.exports = {
         //     message: "GET_PRODUCT_SUCCESS",
         //     data: product
         // });
-        const result = await OrderService.takePayment(req.body,req.userData?.userId);
+        const result = await OrderService.takePayment(req.body,req.userData?.userID);
         return res.status(200).send({});
     })
 }

@@ -70,19 +70,21 @@ export default {
 
         const getPayload = () => {
             let payload = serverOptions.value;
-            payload.size = payload.rowsPerPage;
-            return payload;
+            return cloneDeep(payload);
         };
 
         onMounted(async () => {
             await loadData();
         });
-
+        function cloneDeep(obj){
+            return JSON.parse(JSON.stringify(obj))
+        }
         const loadData = async () => {
             loading.value = true;
             let api = props.api;
             if (api) {
                 let payload = getPayload();
+                payload.size = payload.rowsPerPage;
                 try {
                     let res = await api.getDataTable(payload);
                     if (res && res.data) {

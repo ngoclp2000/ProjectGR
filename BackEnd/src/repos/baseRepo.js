@@ -5,7 +5,8 @@ const {
     buildInsertParams,
     buildSelectWithField,
     parseSkip,
-    parseWhere
+    parseWhere,
+    parseSort
 } = require("../utils/function");
 
 module.exports = class BaseRepo {
@@ -44,14 +45,15 @@ module.exports = class BaseRepo {
     getDataTable = tryCatchBlockForModule(async (payload) => {
         let sql = `SELECT * FROM ${this.model.table} `;
 
-        let parseWhereValue = parseWhere(payload.filter, this.model.fields);
-        sql += " " + parseWhereValue + " " || "";
+        let parseWhereValue = parseWhere(payload.filter, this.model);
+        let parseSortValue = parseSort(payload.sortBy,payload.sortType);
+        sql += " " + parseWhereValue + " " + parseSortValue + " ";
+
         if (payload) {
             sql += parseSkip(payload.page, payload.size);
         }
-        console.log(sql);
         const [resultSet] = await database.query(sql);
-        let sqlSummary = `SELECT COUNT(*) as totalRecord FROM ${this.model.table} ${parseWhereValue || ""};`;
+        let sqlSummary = `SELECT COUNT(*) as totalRecord FROM ${this.model.table} ${parseWhereValue || ""} ${parseSortValue};`;
 
         const [resultSummary] = await database.query(sqlSummary);
 
@@ -69,4 +71,16 @@ module.exports = class BaseRepo {
             last_page: maxPage
         };
     })
+
+    authenAdminRequest = tryCatchBlockForModule(async (userId) =>{
+        if(userId){
+            let adminRoleName = 'admin';
+            let sql = `SELECT * FROM user u  join role r on u.roleId = r.roleId where r.roleName = '${adminRoleName}' and u.userId = '${userId}'`;
+            const [resultSet] = await database.query(sql);
+            if(resultSet && resultSet[0]){
+                return true;
+            }
+        }
+        return false;
+    }); 
 }

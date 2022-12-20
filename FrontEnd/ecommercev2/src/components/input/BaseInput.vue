@@ -1,28 +1,22 @@
 <template>
     <div class="base-input w-100">
-        <label class="label" v-if="label">{{label}}</label>
-        <div class="flex-row" :class="[{error : errorMessage, disabled : disabled}, hasBorder ? 'border' : '']">
-            <div :class="['icon24 icon left',leftIcon]" v-if="leftIcon" :title="errorProvider.errorMessage" @click="onClickLeftIcon">
-                
+        <label class="label" v-if="label">{{ label }}</label>
+        <div class="flex-row" :class="[{ error: errorMessage, disabled: disabled }, hasBorder ? 'btn-border' : '']">
+            <div :class="['icon24 icon left', leftIcon]" v-if="leftIcon" :title="errorProvider.errorMessage"
+                @click="onClickLeftIcon">
+
             </div>
-            <input :title="internalText" 
-                    class="base-input-item flex w-100 "
-                    :placeholder="placeholder"
-                    :disabled="disabled"
-                    :readOnly="readOnly"
-                    :maxlength="maxLength"
-                    :style="{width : `${width}px`}"
-                    ref="input"
-                    :class="{disabled : disabled, 'has-right-icon' : rightIcon , 'has-left-icon' : leftIcon, 'has-border' : hasBorder}"
-                    v-on="listeners"
-                    :type="type"
-                    v-model="internalText"
-            />
-            <div :class="['icon24 icon right icon-input', rightIcon]" v-if="rightIcon" :title="errorProvider.errorMessage" @click="onClickRightIcon">
+            <input :title="internalText" class="base-input-item flex w-100 " :placeholder="placeholder"
+                :disabled="disabled" :readOnly="readOnly" :maxlength="maxLength" :style="{ width: `${width}px` }"
+                ref="input"
+                :class="{ disabled: disabled, 'has-right-icon': rightIcon, 'has-left-icon': leftIcon, 'has-border': hasBorder }"
+                v-on="listeners" :type="type" v-model="internalText" />
+            <div :class="['icon24 icon right icon-input', rightIcon]" v-if="rightIcon"
+                :title="errorProvider.errorMessage" @click="onClickRightIcon">
 
             </div>
             <div class="error-text" v-if="errorMessage">
-                {{errorMessage}}
+                {{ errorMessage }}
             </div>
         </div>
     </div>
@@ -40,64 +34,64 @@ import {
 } from 'vue';
 
 import baseComponent from '@/components/base/BaseComponent.vue';
-import {useValidateControl} from '@/setup/validateControl.js';
+import { useValidateControl } from '@/setup/validateControl.js';
 
 export default defineComponent({
     extends: baseComponent,
-    name : 'baseInput',
+    name: 'baseInput',
     props: {
         /**
          * modelValue đẩy ra ngoài để binding 2 chiều
          */
-        modelValue:{
+        modelValue: {
             default: null
         },
-        placeholder:{
+        placeholder: {
             fault: null,
-            type: [Number,String]
+            type: [Number, String]
         },
-        leftIcon:{
+        leftIcon: {
             default: null,
             type: String
         },
-        rightIcon:{
+        rightIcon: {
             default: null,
             type: String
         },
-        maxLength:{
+        maxLength: {
             default: null,
             type: Number
         },
-        hasBorder:{
+        hasBorder: {
             default: true,
             type: Boolean
         },
-        isClickLeftIcon:{
+        isClickLeftIcon: {
             type: Boolean,
             default: true
         },
-        isClickRightIcon:{
+        isClickRightIcon: {
             type: Boolean,
             default: true
         },
-        width:{
-            type: [Number,String],
+        width: {
+            type: [Number, String],
             default: null
         },
-        field:{
+        field: {
             type: String,
             default: null
         },
-        type:{
+        type: {
             type: String,
             default: null
         },
-        label:{
+        label: {
             type: String,
             default: null
         }
     },
-    emits:[
+    emits: [
         'baseKeydown',
         'update:modelValue',
         'focus',
@@ -106,14 +100,15 @@ export default defineComponent({
         'baseKeyup',
         'onClickLeftIcon',
         'onClickRightIcon',
-        'input'
+        'input',
+        'enterPress'
     ],
-    setup(props, {emit}){
+    setup(props, { emit }) {
         const internalText = ref();
         const focused = ref(false);
         const displayValue = ref(null);
         const input = ref(null);
-        let  scrollWidth = 0;
+        let scrollWidth = 0;
 
         const { proxy } = getCurrentInstance();
 
@@ -121,45 +116,45 @@ export default defineComponent({
             errorMessage,
             validate,
             isValidate
-        } = useValidateControl({props});
+        } = useValidateControl({ props });
 
         // Hook
-        onMounted(() =>{
+        onMounted(() => {
             internalText.value = props.modelValue;
         })
 
         // Method
-        const hasToolTip = () =>{
-            if(scrollWidth > input?.value?.offsetWidth){
+        const hasToolTip = () => {
+            if (scrollWidth > input?.value?.offsetWidth) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
 
-        const onFocus = (e) =>{
+        const onFocus = (e) => {
             focused.value = true;
-            emit('focus',internalText.value,e);
+            emit('focus', internalText.value, e);
         }
 
-        const onBlur = (e) =>{
+        const onBlur = (e) => {
             focused.value = false;
             validate();
-            emit('blur',internalText.value,e);
+            emit('blur', internalText.value, e);
         }
 
-        const getValue = () =>{
+        const getValue = () => {
             return internalText.value;
         }
 
-        const onClickLeftIcon = () =>{
-            if(props.isClickLeftIcon){
+        const onClickLeftIcon = () => {
+            if (props.isClickLeftIcon) {
                 emit('onClickLeftIcon');
             }
         }
 
-        const onClickRightIcon = () =>{
-            if(props.isClickLeftIcon){
+        const onClickRightIcon = () => {
+            if (props.isClickLeftIcon) {
                 emit('onClickRightIcon');
             }
         }
@@ -170,32 +165,32 @@ export default defineComponent({
         }
 
         const setValue = (value) => {
-            if(proxy.rules){
+            if (proxy.rules) {
                 const rule = proxy.rules.find(x => x.name === 'pattern' && x.compareValue === 'phone');
-                if(rule && value){
-                    value = value.replace(/ /g,'').replace(/\./g,'');
+                if (rule && value) {
+                    value = value.replace(/ /g, '').replace(/\./g, '');
                 }
             }
             internalText.value = value;
         }
 
         const cancelBubbleEvent = (e) => {
-            if(e){
-                if(typeof e.preventDefault === 'function'){
+            if (e) {
+                if (typeof e.preventDefault === 'function') {
                     e.preventDefault();
                 }
-                if(typeof e.stopPropagation === 'function'){
+                if (typeof e.stopPropagation === 'function') {
                     e.stopPropagation();
                 }
-                if(typeof e.stopImmediatePropagation === 'function'){
+                if (typeof e.stopImmediatePropagation === 'function') {
                     e.stopImmediatePropagation();
                 }
             }
         }
 
-        const listeners = computed(() =>{
+        const listeners = computed(() => {
             return {
-                blur : (e) => {
+                blur: (e) => {
                     cancelBubbleEvent(e);
                     onBlur(e);
                 },
@@ -205,34 +200,39 @@ export default defineComponent({
                 },
                 change: (e) => {
                     cancelBubbleEvent(e);
-                    emit('change',e,internalText.value);
+                    emit('change', e, internalText.value);
                 },
                 keydown: (e) => {
                     e.stopPropagation();
-                    emit('baseKeydown',e,internalText.value);
+                    var code = (e.keyCode ? e.keyCode : e.which);
+                    if (code == 13) { //Enter keycode
+                        emit('enterPress', e, internalText.value);
+                    } else {
+                        emit('baseKeydown', e, internalText.value);
+                    }
                 },
                 keyup: (e) => {
-                    emit('baseKeyup',e,internalText.value);
+                    emit('baseKeyup', e, internalText.value);
                 },
-                input:(e) =>{
+                input: (e) => {
                     cancelBubbleEvent(e);
-                    emit('input',internalText.value);
+                    emit('input', internalText.value);
                 }
             }
         });
 
-        watch(() => internalText.value,(value) =>{
-            if(value !== props.modelValue){
-                emit('update:modelValue',value,props.field);
+        watch(() => internalText.value, (value) => {
+            if (value !== props.modelValue) {
+                emit('update:modelValue', value, props.field);
                 //scrollWidth = input.value.scrollWidth;
             }
         })
 
-        watch(() => props.modelValue, (value) =>{
+        watch(() => props.modelValue, (value) => {
             setValue(value);
         })
 
-        return{
+        return {
             internalText,
             focused,
             listeners,
@@ -251,6 +251,5 @@ export default defineComponent({
 </script>
 
 <style>
-
 
 </style>

@@ -6,6 +6,9 @@ import routerCheckout from "./routerCheckout.js";
 import routerProfile from './routerProfile.js';
 import routerDemo from "./routerDemo.js";
 import routerAdmin from "./routerAdmin";
+import store from '@/store/store.js';
+
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -32,23 +35,30 @@ const router = createRouter({
         anonymous : true
       }
     },{
-      path: '/login',
+      path: '/login:key?',
       component: () => import ('@/views/login/LoginPage.vue'),
-      name: 'Đăng nhập',
+      name: 'Login Page',
       meta:{
         anonymous : true
       }
     },{
       path: '/signup',
       component: () => import ('@/views/signup/SignupPage.vue'),
-      name: 'Đăng ký',
+      name: 'Signup',
       meta:{
         anonymous : true
       }
     },{
       path: '/completeProfile',
       component: () => import ('@/views/signup/CompleteProfile.vue'),
-      name: 'Hoàn thành hồ sơ',
+      name: 'Complete Profile',
+      meta:{
+        anonymous : true
+      }
+    },{
+      path: '/logout:key?',
+      component: () => import ('@/views/logout/Logout.vue'),
+      name: 'Logout',
       meta:{
         anonymous : true
       }
@@ -59,6 +69,12 @@ const router = createRouter({
 });
 
 router.beforeEach((to,from,next) =>{
+  const publicPages = ['/login', '/signup'];
+  const authRequired = !publicPages.includes(to.path);
+  const loggedIn = store.state.token;
+  if (authRequired && !loggedIn) {
+    next('/login');
+  }
   document.title = to.name;
   next();
 })

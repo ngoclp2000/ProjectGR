@@ -12,6 +12,11 @@ const store = createStore({
             productCartList: [
 
             ],
+            snackBar:{
+                isDisplay: false,
+                message : '',
+                timeOut: 2500
+            },
             isLoading: false,
             menuList:[{
                 iconClass: 'icon24-admin dashboard',
@@ -99,6 +104,7 @@ const store = createStore({
         updateToken(state, payload) {
             if(payload && typeof payload === 'object') {
                 state.token = payload.token;
+                state.refreshToken = payload.refreshToken;
             }
         },
         updateIsLoading(state, payload){
@@ -113,6 +119,20 @@ const store = createStore({
             if(payload){
                 state.menuList = payload;
             }
+        },
+        changeStackRequestCount(state, payload){
+            state.stackRequestCount += payload;
+        },
+        changeNewToken(state, payload){
+            state.newToken = payload;
+        },
+        updateLoadingPlace(state,payload){
+            if(payload){
+                state.loadingPlace = payload.loadingPlace;
+            }
+        },
+        changeSnackBar(state,payload){
+            state.snackBar = payload;
         }
     },
     actions: {
@@ -142,6 +162,18 @@ const store = createStore({
         },
         updateMenuItems(context,payload){
             context.commit("updateMenuItems",payload);
+        },
+        changeStackRequestCount(context,payload){
+            context.commit("changeStackRequestCount",payload);
+        },
+        changeNewToken(context,payload){
+            context.commit("changeNewToken",payload);
+        },
+        updateLoadingPlace(context,payload){
+            context.commit("updateLoadingPlace",payload);
+        },
+        changeSnackBar(context,payload){
+            context.commit("changeSnackBar",payload);
         }
     },
     getters: {

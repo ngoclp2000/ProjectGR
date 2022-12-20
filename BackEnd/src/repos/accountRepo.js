@@ -50,7 +50,8 @@ module.exports = class AccountRepo extends BaseRepo {
             {
                 userId: resultSet[0].userId,
                 avatar: resultSet[0].avatar,
-                fullName: resultSet[0].fullName
+                fullName: resultSet[0].fullName,
+                email: resultSet[0].email,
             };
     })
 

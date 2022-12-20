@@ -113,6 +113,7 @@ export default {
                     setTimeout(() => {
                         delete me._clicking;
                     }, delay);
+                    emit("click");
                 },
                 mousedown: (event) => {
                     cancelEvent(event);

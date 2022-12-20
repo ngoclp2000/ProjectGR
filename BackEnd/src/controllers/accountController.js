@@ -32,7 +32,7 @@ module.exports = {
         const { account, password } = req.body;
         const result = await AccountService.signIn(account, password);
         if (!result) return res.status(404).send({ message: "SIGN_IN_FAIL" });
-
-        return res.status(200).send({ message: "SIGN_IN_SUCCESS", data: Authentication.createToken(result) });
+        let dataResponse = await Authentication.createToken(result);
+        return res.status(200).send({ message: "SIGN_IN_SUCCESS", data: dataResponse });
     })
 }

@@ -23,7 +23,7 @@
                 </main-menu-item>
             </div>
         </div>
-        <div class="main-content-admin" :class="{'toggle-navbar' : !toggleNavbarValue}">
+        <div class="main-content-admin" :class="{'toggle-navbar' : !toggleNavbarValue}" >
             <div class="label-container">
                 <div class="icon24 three-line" @click="toggleNavbar">
 
@@ -52,6 +52,7 @@ export default {
         const toggleNavbarValue = ref(true);
         onMounted(() => {
         })
+        
         const menuItemClick = async (key) => {
             let url = "";
             menuList.forEach(item => {

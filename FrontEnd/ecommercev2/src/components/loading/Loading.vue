@@ -8,7 +8,6 @@
                 <div></div>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -44,6 +43,8 @@ export default {
     z-index: 999999;
     background: black;
     opacity: 0.5;
+    height: 100%;
+    width: 100%;
 }
 
 .ldio-2msfvsc59wo div {

@@ -5,27 +5,30 @@
         >
             <template #card-sub-information >
                 <div class="product-discount" >
-                    {{productDiscount}}%
+                    {{objectProduct?.productDiscount || productDiscount}}%
                 </div>
             </template>
             <template #card-image>
-                <img :src="productImage" alt="" style="width: 100%; height: 100%">
+                <img :src="objectProduct?.productImageLink || productImage" alt="" style="width: 100%; height: 100%">
             </template>
             <template #card-name>
-                <span>{{productName}}</span>
+                <span>{{ objectProduct?.productName || productName}}</span>
+                <div v-if="objectProduct?.productRate" class="product-rate">
+                    <star-rating :rating="objectProduct?.productRate" :star-size="15" :show-rating="false" read-only  v-bind:max-rating="5" ></star-rating>
+                </div>
             </template>
             <template #card-detail-information>
                 <div class="product-detail product-unit">
-                    ĐVT: {{productUnit}}
+                    ĐVT: {{ objectProduct?.productUnit || productUnit}}
                 </div>
-                <div class="product-detail product-price" v-if="productPrice > 0">
-                    {{formatVND(productPrice)}}
+                <div class="product-detail product-price" v-if="( objectProduct?.productPrice || productPrice) > 0">
+                    {{formatVND(objectProduct?.productPrice || productPrice)}}
                 </div>
-                <div class="product-detail product-old-price" v-if="productOldPrice > 0">
-                    {{formatVND(productOldPrice)}}
+                <div class="product-detail product-old-price" v-if=" ( objectProduct?.productOldPrice || productOldPrice) > 0">
+                    {{formatVND(objectProduct?.productOldPrice || productOldPrice)}}
                 </div>
             </template>
-            <template #button>
+            <template #button v-if="hasButton">
                 <base-button text="Thêm vào giỏ hàng" customClass="w-100 btn-red" @click.stop="addProductCart">
 
                 </base-button>
@@ -41,16 +44,22 @@ import BaseButton from '@/components/button/BaseButton.vue';
 import {getCurrentInstance} from 'vue';
 import {useFormat} from '@/commons/format.js';
 import { useToast } from "primevue/usetoast";
+import StarRating from 'vue-star-rating';
 export default {
     name: "ProductCard",
     components: {
         Card,
-        BaseButton
+        BaseButton,
+        StarRating
     },
     props: {
         hide:{
             type: Boolean,
             default: false,
+        },
+        objectProduct:{
+            type: Object,
+            default: null
         },
         productId:{
             type: String,
@@ -79,6 +88,10 @@ export default {
         productImage:{
             type: String,
             default: ""
+        },
+        hasButton:{
+            type: Boolean,
+            default: true
         }
     },
     emits:[
@@ -122,7 +135,11 @@ export default {
 <style lang="scss">
 .product-card {
     font-size: 12px;
-
+    .product-rate{
+        display: flex;
+        gap: 10px;
+        margin-top: 5px;
+    }
     .product-detail {
         margin-bottom: 5px;
     }

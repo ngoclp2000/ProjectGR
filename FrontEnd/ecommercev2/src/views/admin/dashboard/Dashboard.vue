@@ -125,6 +125,7 @@ import LineChart from '@/components/chart/linechart/LineChart.vue';
 import DoughnutChart from '@/components/chart/doughnut/DoughnutChart.vue';
 import gridView from '@/components/gridView/GridView.vue';
 import productAPI from '@/apis/components/productAPI';
+import {useAdminPage}  from '@/views/admin/AdminPage.js';
 
 export default {
   components: {
@@ -138,8 +139,13 @@ export default {
     const summaryInformationObject = ref([]);
     const summaryDetailInformationObject = ref([]);
     const { durationList, formatDateRange, formatPreviewDateRange, customSummaryInformationObject, customSummaryDetailInformationObject } = useDashboard();
+    const {changeChosenTabMenuItem} = useAdminPage();
     const dateFilter = ref();
     onMounted(async () => {
+      // trigger chọn tab
+      await changeChosenTabMenuItem('dashboard');
+
+
       const startDate = new Date();
       const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
       dateFilter.value = [startDate, endDate];

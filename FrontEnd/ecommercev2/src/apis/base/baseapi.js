@@ -66,20 +66,13 @@ export default class BaseApi{
         return BaseAPIConfig.get(`${this.controller}code/${code}`)
     }
 
-    getAsync(url,headers){
-        return BaseAPIConfig.get(url,{
-            headers
-        });
+    getAsync(url){
+        return BaseAPIConfig.get(url);
     }
     
-    async postAsync(url,headers,data){
-        if(headers == null || Object.keys(headers).length === 0){
-            headers ={"Authorization" : `Bearer ${store.state.token}`};
-        }
+    async postAsync(url,data){
 
-        return await BaseAPIConfig.post(url,data,{
-            headers
-        });
+        return await BaseAPIConfig.post(url,data);
     }
 
     /**

@@ -7,4 +7,5 @@ module.exports = {
     GreaterThanOrEqual : '>=',
     LessThanOrEqual : '<=',
     In : 'in',
+    Between: 'between',
 }

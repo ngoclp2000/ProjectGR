@@ -8,6 +8,7 @@ const path = require('path');
 const apiRoute = require('./src/routes/router');
 const prototype = require('./src/helpers/prototype');
 
+
 const accessLogStream = fs.readFileSync("./logs/access.log",{
     interval: "id",
     path: path.join(__dirname, 'log')

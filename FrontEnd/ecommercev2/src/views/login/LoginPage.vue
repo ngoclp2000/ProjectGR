@@ -11,7 +11,7 @@
           </div>
           <div class="login-field-input">
             <base-input placeholder="Nhập email hoặc số điện thoại" :modelValue="model.account"
-              @update:modelValue="updateValue" field="account"></base-input>
+              @update:modelValue="updateValue" field="account" @enterPress="login"></base-input>
           </div>
         </div>
         <div class="login-field-container flex flex-column">
@@ -19,8 +19,8 @@
             Mật khẩu
           </div>
           <div class="login-field-input">
-            <base-input placeholder="Mật khẩu" type="password" :modelValue="model.password" @update:modelValue="updateValue"
-              field="password"></base-input>
+            <base-input placeholder="Mật khẩu" type="password" :modelValue="model.password"
+              @update:modelValue="updateValue" field="password" @enterPress="login"></base-input>
           </div>
         </div>
         <div class="login-button">
@@ -52,20 +52,24 @@
         </div>
       </div>
     </div>
+    <snack-bar></snack-bar>
   </div>
 </template>
 
 <script>
 import BaseButton from '@/components/button/BaseButton.vue';
 import BaseInput from '@/components/input/BaseInput.vue';
-import { ref, getCurrentInstance } from 'vue';
+import { ref, getCurrentInstance, onMounted } from 'vue';
 import AccountAPI from '@/apis/components/accountAPI';
 import jwt_decode from "jwt-decode";
+import SnackBar from '@/components/snackbar/SnackBar.vue';
+
 export default {
   name: 'LoginPage',
   components: {
     BaseButton,
-    BaseInput
+    BaseInput,
+    SnackBar
   },
   setup(props, { emit }) {
     const { proxy } = getCurrentInstance();
@@ -73,30 +77,51 @@ export default {
     const updateValue = (value, field) => {
       model.value[field] = value;
     }
+    onMounted(() => {
+      if (proxy.$store.state.token) {
+        proxy.$router.push('/');
+      }
+    });
 
     const goToSignup = () => {
       proxy.$router.push("/signup");
     }
     const login = async () => {
-      if(proxy.model){
-        let res = await AccountAPI.signIn(proxy.model);
-        if(res && res.data && res.data.data ){
-          const userInfo = jwt_decode(res.data.data);
-          if(userInfo && typeof userInfo === 'object'){
-            let payload = {
-              userId : userInfo.userId,
-              avatar : userInfo.avatar,
-              fullName : userInfo.fullName,
-              email: userInfo.email,
-            };
-            proxy.$store.dispatch("deleteAccount", payload);
-            proxy.$store.dispatch("updateAccount", payload);
-            proxy.$store.dispatch("updateToken",{
-              token : res.data.data
-            });
-            proxy.$router.push('homepage');
+      if (proxy.model) {
+        try {
+          let res = await AccountAPI.signIn(proxy.model);
+          if (res && res.data && res.data.data) {
+            const userInfo = jwt_decode(res.data.data.token);
+            if (userInfo && typeof userInfo === 'object') {
+              let payload = {
+                userId: userInfo.userId,
+                avatar: userInfo.avatar,
+                fullName: userInfo.fullName,
+                email: userInfo.email,
+              };
+              proxy.$store.dispatch("deleteAccount", payload);
+              proxy.$store.dispatch("updateAccount", payload);
+              proxy.$store.dispatch("updateToken", {
+                token: res.data.data?.token,
+                refreshToken: res.data.data?.refreshToken
+              });
+              proxy.$router.push('homepage');
+            }
+          } 
+        } catch (e) {
+          if(e && e.response.status){
+            switch(e.response.status){
+              case 404:
+                proxy.$store.dispatch('changeSnackBar',{
+                  isDisplay: true,
+                  message: 'Mật khẩu không chính xác',
+                  timeOut: 3000
+                })
+                break;
+            }
           }
         }
+
       }
     }
     return {

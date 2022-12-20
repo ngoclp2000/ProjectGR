@@ -1,12 +1,48 @@
 @import "@/assets/scss/_variables.scss";
 
-.product-manage{
+.product-manage {
     background-color: #F9FBFD;
-    .label{
+    height: calc(100% - 34px);
+
+    .w-25 {
+        width: 25%;
+    }
+
+    .w-75 {
+        width: 75%;
+    }
+
+    .label {
         font-weight: $font-weight-bold;
         font-size: $font-size-label;
         padding: 10px 0px;
         margin-bottom: 20px;
         border-bottom: 1px solid #F0F0F0;
+    }
+
+    .product-manage-content {
+        align-items: flex-start;
+
+        .filter-container {
+            .header {
+                padding: 10px;
+                background-color: #ffffff;
+                border-radius: 4px;
+            }
+
+            .filter-label {
+                font-weight: $font-weight-bold;
+                font-size: $font-filter-size-label;
+            }
+        }
+
+        .product-list {
+            .product-list-container {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 15px;
+                padding-left: 50px;
+            }
+        }
     }
 }

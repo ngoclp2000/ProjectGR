@@ -16,8 +16,18 @@ import { vfmPlugin } from 'vue-final-modal';
 import Datepicker from '@vuepic/vue-datepicker';
 import { Skeletor } from 'vue-skeletor';
 
+import 'vuetify/styles';
+import { createVuetify } from 'vuetify';
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
+
+
 const app = createApp(App);
 
+const vuetify = createVuetify({
+    components,
+    directives,
+  })
 
 /* Styles */
 
@@ -34,6 +44,7 @@ import 'vue-select/dist/vue-select.css';
 import 'vue3-easy-data-table/dist/style.css';
 import '@vuepic/vue-datepicker/dist/main.css';
 import 'vue-skeletor/dist/vue-skeletor.css';
+import '@mdi/font/css/materialdesignicons.css';
 
 /* Khai báo thành phần dùng global */
 
@@ -47,6 +58,7 @@ app.use(store);
 app.use(PrimeVue);
 app.use(ToastService);
 app.use(ConfirmationService);
+app.use(vuetify);
 app.use(vfmPlugin);
 
 app.component('Dialog', Dialog);

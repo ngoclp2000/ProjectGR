@@ -1,7 +1,9 @@
+"use strict"
 const HttpError = require("../models/http-errors");
 const mappingField = require("../helpers/mappingField");
 const optionFilter = require("../shared/enums/optionFilter");
 const DataTypes = require("../shared/enums/dataType");
+const SortType = require("../shared/enums/sortType");
 
 module.exports = {
     tryCatchBlockForModule: (passInFunc) => {
@@ -25,7 +27,7 @@ module.exports = {
                 return await passInFunc(req, res, next);
             } catch (error) {
                 console.log("Error in tryCatchBlockForController:::", error);
-                return next(new HttpError("SERVER_INTERNAL_ERROR", 500));
+                return next();
             }
         };
     },
@@ -110,77 +112,178 @@ module.exports = {
     getTokenFromRequest: (req) => {
         return req.headers.authorization.split(" ")[1];
     },
-    parseWhere(filters, fieldsConfig) {
+    parseWhere: (filters, model) => {
         let sql = "",
             arrayWhere = [];
         if (filters && Array.isArray(filters) && filters.length > 0) {
             filters.forEach(item => {
-                let keyword = "";
-                switch (item.type) {
-                    case optionFilter.Like:
-                        keyword = "LIKE";
-                        break;
-                    case optionFilter.Equal:
-                        keyword = "=";
-                        break;
-                    case optionFilter.NotEqual:
-                        keyword = "!=";
-                        break;
-                    case optionFilter.GreaterThan:
-                        keyword = ">";
-                        break;
-                    case optionFilter.LessThan:
-                        keyword = "<";
-                        break;
-                    case optionFilter.GreaterThanOrEqual:
-                        keyword = ">=";
-                        break;
-                    case optionFilter.LessThanOrEqual:
-                        keyword = "<=";
-                        break;
-                    case optionFilter.In:
-                        keyword = "IN";
-                        break;
+                let whereClause = module.exports.getWhereClause(model,item.field,item.type,item.value);
+                if(whereClause){
+                    arrayWhere.push(whereClause);
                 }
-                // Lấy dạng của giá trị
-                let value = "";
-                if (fieldsConfig != null) {
-                    let fieldType = fieldsConfig[item.field].type;
-                    switch (fieldType) {
-                        case DataTypes.Number:
-                        case DataTypes.Boolean:
-                            value = item.value;
-                            break;
-                        case DataTypes.String:
-                            switch (item.type) {
-                                case optionFilter.Like:
-                                    value = "'%" + item.value + "%'";
-                                    break;
-                                default:
-                                    value = "'" + item.value + "'";
-                                    break;
-                            }
-                            break;
-                        case DataTypes.Date:
-                            break;
-                    }
-                }
-                arrayWhere.push(`(${item.field} ${keyword} ${value})`);
             });
         }
-        
+
         sql = arrayWhere.join(" AND ");
         if (sql != null && sql != "") {
             sql = " WHERE " + sql;
         }
         return sql;
     },
-    parseSkip(page, size) {
+    parseSkip: function (page, size) {
         if (page && size) {
             const pageInt = parseInt(page),
                 sizeInt = parseInt(size);
             return `LIMIT ${size} OFFSET ${(pageInt - 1) * sizeInt}`;
         }
+        return "";
     },
+    parseSort: function (field, type,model) {
+        let sql = "";
+        if (field != null && Array.isArray(field) && type && Array.isArray(type) && field.length > 0 && type.length > 0) {
+            sql = " ORDER BY ";
+            for (let i = 0; i < field.length; i++) {
+                let alias = module.exports.getAlias(model,field[i]);
+                sql += ` ${alias}.${field[i]} ${type[i]} ${i == field.length - 1 ? "" : ","}`;
+            }
+        }
+        return sql;
+    },
+    parseJoin: function (model, type, alias) {
+        let sql = "",
+            joinArray = [];
+        // JOIN orderproduct o ON p.productId = o.productId
+        if (model && model.relationTable && Array.isArray(model.relationTable)) {
+            let relationTableType = model.relationTable.filter(item => item.type == type);
+            relationTableType.forEach(item => {
+                let joinSQL = `LEFT JOIN ${item.model.table} ${item.model.alias} ON ${alias}.${item.foreignKey} = ${item.model.alias}.${item.foreignKey}`;
+                joinArray.push(joinSQL);
+            });
+            sql = joinArray.join(' ');
+        }
+        return sql;
+    },
+    getAlias: function (model, field) {
+        if (model && model.fields) {
+            if (model.fields[field] != null) {
+                return model.alias;
+            }
+            if (model.relationTable && Array.isArray(model.relationTable)) {
+                for (let i = 0; i < model.relationTable.length; i++) {
+                    let modelRelationTable = model.relationTable[i].model;
+                    if (modelRelationTable && modelRelationTable.fields && modelRelationTable.fields[field] != null) {
+                        return modelRelationTable.alias;
+                    }
+                }
+            }
+        }
+        return "";
+    },
+    getWhereClause: function (model, field,type,valueField) {
+        let keyword = "";
+        switch (type) {
+            case optionFilter.Like:
+                keyword = "LIKE";
+                break;
+            case optionFilter.Equal:
+                keyword = "=";
+                break;
+            case optionFilter.NotEqual:
+                keyword = "!=";
+                break;
+            case optionFilter.GreaterThan:
+                keyword = ">";
+                break;
+            case optionFilter.LessThan:
+                keyword = "<";
+                break;
+            case optionFilter.GreaterThanOrEqual:
+                keyword = ">=";
+                break;
+            case optionFilter.LessThanOrEqual:
+                keyword = "<=";
+                break;
+            case optionFilter.In:
+                keyword = "IN";
+            case optionFilter.Between:
+                keyword = "between";
+                break;
+        }
+        // Lấy dạng của giá trị
+        let value = "";
+        // Tìm kiếm filed Config
+        let fieldsConfig = null;
+        if (model && model.fields) {
+            if (model.fields[field] != null) {
+                fieldsConfig = model.fields[field];
+            }
+            if (model.relationTable && Array.isArray(model.relationTable) && !fieldsConfig) {
+                for (let i = 0; i < model.relationTable.length; i++) {
+                    let modelRelationTable = model.relationTable[i].model;
+                    if (modelRelationTable && modelRelationTable.fields && modelRelationTable.fields[field] != null) {
+                        fieldsConfig = modelRelationTable.fields[field];
+                        break;
+                    }
+                }
+            }
+        }
+        if (fieldsConfig != null ) {
+            let fieldType = fieldsConfig.type;
+            switch (fieldType) {
+                case DataTypes.Number:
+                    switch (type) {
+                        case optionFilter.Between:
+                            if (Array.isArray(valueField)) {
+                                value += valueField[0] + " AND " + valueField[1];
+                            }
+                            break;
+                        default:
+                            value = valueField;
+                            break;
+                    }
+                    break;
+                case DataTypes.Boolean:
+                    value = valueField;
+                    break;
+                case DataTypes.String:
+                    switch (type) {
+                        case optionFilter.Like:
+                            value = "'%" + valueField + "%'";
+                            break;
+                        default:
+                            value = "'" + valueField + "'";
+                            break;
+                    }
+                    break;
+                case DataTypes.Date:
+                    break;
+            }
+            let alias = module.exports.getAlias(model, field);
 
+            return `(${alias}.${field} ${keyword} ${value})`;
+        }
+        return null;
+    },
+    getSelectClause: function(model,fieldList){
+        let selectArray = [];
+        if(fieldList && Array.isArray(fieldList)){
+            fieldList.forEach(field =>{
+                if (model && model.fields) {
+                    if (model.fields[field] != null) {
+                        selectArray.push(`${model.alias}.${field}`);
+                    }
+                    if (model.relationTable && Array.isArray(model.relationTable)) {
+                        for (let i = 0; i < model.relationTable.length; i++) {
+                            let modelRelationTable = model.relationTable[i].model;
+                            if (modelRelationTable && modelRelationTable.fields && modelRelationTable.fields[field] != null) {
+                                selectArray.push(`${modelRelationTable.alias}.${field}`);
+                            }
+                        }
+                    }
+                }
+            })
+        }
+        
+        return selectArray.join(',');
+    }
 }

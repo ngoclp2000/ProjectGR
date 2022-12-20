@@ -2,7 +2,9 @@
 <div id="app">
   <router-view/>
   <toast/>
-  <loading v-if="IsLoading"></loading>
+  <teleport :to="loadingPlace">
+    <loading v-if="IsLoading"></loading>
+  </teleport>
 </div>
 </template>
 
@@ -21,8 +23,14 @@ export default {
     const IsLoading = computed(() =>{
       return proxy.$store.state.isLoading;
     })
+
+    const loadingPlace = computed(() =>{
+      return proxy.$store.state.loadingPlace || "body";
+    });
+
     return{
-      IsLoading
+      IsLoading,
+      loadingPlace,
     }
   }
 }
